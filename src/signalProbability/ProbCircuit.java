@@ -241,6 +241,19 @@ public class ProbCircuit extends Circuit {
     public ArrayList<ProbGate> getProbGates() {
         return probGates;
     }
+    
+    public ProbGate getProbGateByName(String name) {
+        
+        ProbGate pGate = null;
+        
+        for(ProbGate fooGate : this.probGates) {
+            if(fooGate.getId().equals(name)) {
+                pGate = fooGate;
+            }
+        }
+        
+        return pGate;
+    }
 
     public void setProbGates(ArrayList<ProbGate> probGates) {
         this.probGates = probGates;

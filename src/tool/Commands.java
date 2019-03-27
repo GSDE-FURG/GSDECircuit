@@ -31,6 +31,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.BitSet;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -97,6 +98,7 @@ import static ops.CommonOps.getFIT;
 import static ops.CommonOps.inherentReliabilityFloat;
 import ops.FanoutOps;
 import ops.SPRMultiPassV3Ops;
+import tool.Portas;
 
 /**
  *
@@ -1065,7 +1067,7 @@ public class Commands {
 //              "s386_n49.v",
 //              "s400_n64.v",
 //              "s420_Z.v",
-//              "s444_n109.v",
+              "s444_n109.v",
 //              "s510_n78.v",
 //              "s641_n178.v",
 //              "s713_n177.v",
@@ -1092,35 +1094,42 @@ public class Commands {
              * CIRCUITOS UTILIZADOS NA DISSERTACAO
              * NA ANÁLISE DE PORTAS SPR
              */
-              "s9234_n676.v",
-              "s386_n49.v",
-              "s838_n215.v", 
-              "s382_n69.v",
-              "s400_n64.v",                            
-              "s27_comb_Marcelinho.v",
-              "s298_n64.v",
-              "s444_n109.v",
-              "s344_n61.v",
-              "s349_n66.v",
-              "s832_n90.v",
+//              "s9234_n676.v",
+//              "s386_n49.v",
+//              "s838_n215.v", 
+//              "s382_n69.v",
+//              "s400_n64.v",                            
+//              "s27_comb_Marcelinho.v",
+//              "s298_n64.v",
+//              "s444_n109.v",
+//              "s344_n61.v",
+//              "s349_n66.v",
+//              "s832_n90.v",
+//              "s13207_n594.v",
+//              "s38584_n7656.v",
+//              "s510_n78.v",
+//              "s1488_n75.v",
+//              "s820_n95.v",
+//              "s1494_n70.v",
+              
               
 //              "s208_comb_Marcelinho.v",                                                                                    
 //              "s420_Z.v",              
-//              "s510_n78.v",
+//              
 //              "s641_n178.v",
 //              "s713_n177.v",
-//              "s820_n95.v",                                                                                             
+//                                                                                                           
 //              "s953_n104.v",              
 //              "s1196_G542.v",                          
 //              "s1238_n117.v",                           
 //              "s1423_n90.v",                                                     
-//              "s1488_n75.v",                                                     
-//              "s1494_n70.v",                                                   
+//                                                                   
+//                                                                 
 //              "s5378_n240.v",                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            
-//              "s13207_n594.v",                                                                                                                                                                                                               
+//                                                                                                                                                                                                                             
 //              "s15850_n460.v",                                                                                                                                                                                              
 //              "s38417_n7962.v",
-//              "s38584_n7656.v",
+//              
             /*
              * ########################### 
              */
@@ -1197,9 +1206,9 @@ public class Commands {
 //            "0.98",
 //            "0.99",            
 //            "0.999",
-//            "0.9999",
+            "0.9999",
 //            "0.99999",
-            "0.999999",
+//            "0.999999",
 //            "0.9999999",
 //            "0.99999999",
 //            "0.999999999",
@@ -1888,11 +1897,14 @@ public class Commands {
                 boolean valoresTabela = false;
                 
                 
-                boolean analiseClassifica = true;
+                boolean analiseClassifica = false;
                 boolean characteristicas = false;
-                boolean fooAnalisys = false;
+                boolean fooAnalisys = true;
                 boolean analiseFanouts = false;
                 boolean analiseTemposSPR = false;
+                boolean analisePortasSPR = false;
+                boolean tiposPortas = false;
+                
                 
                 
                 
@@ -1981,7 +1993,7 @@ public class Commands {
                 for (int i = 0; i < reliabilities.length; i++) {
                     
                     String[] gateReliabilities = new String[]{                                  
-                        "0.0",                        
+//                        "0.0",                        
 //                        "0.01",                        
 //                        "0.02",                        
 //                        "0.03",                        
@@ -2475,7 +2487,7 @@ public class Commands {
                                 pCircuit.clearProbSignalsMatrix();                    
                                 pCircuit.setDefaultProbSourceSignalMatrix();
                                 pCircuit.setProbSignalStates(false);
-                                pCircuit.getProbGates().get(k).setGateReliability(new BigDecimal("0.99999"));
+                                pCircuit.getProbGates().get(k).setGateReliability(BigDecimal.ONE);
                                 pCircuit.setPTMReliabilityMatrix();
 
                                 hashMtbfSpr1.put(pCircuit.getProbGates().get(k).getId(), getMTBF(SPROps.getSPRReliability(pCircuit)).setScale(9, RoundingMode.HALF_UP));
@@ -2484,7 +2496,11 @@ public class Commands {
                         
                         mtbfSpr1 = sortByValue(hashMtbfSpr1);
                         
+                        
                         classficaMTBFSPR1 = new ArrayList<>(mtbfSpr1.keySet());
+                        ArrayList<Object> bigFoo = new ArrayList<>();
+                        
+                        Collections.reverse(classficaMTBFSPR1);
                         
                         System.out.println("Classificação SPR confiabilidade 1");
                         for (int k = 0; k < classficaMTBFSPR1.size(); k++) {
@@ -2496,7 +2512,13 @@ public class Commands {
                         
                         System.out.println("SPR conf 1 - MTBF");
                         for (Map.Entry entry : mtbfSpr1.entrySet()) {
-                            System.out.println(entry.getValue());                            
+                            bigFoo.add(entry.getValue());                            
+                        }
+                        
+                        Collections.reverse(bigFoo);
+                        
+                        for(Object obj : bigFoo) {
+                            System.out.println(obj);
                         }
                         
 /***
@@ -2699,6 +2721,173 @@ public class Commands {
                         System.out.println(tempo.divide(new BigDecimal("15"), RoundingMode.HALF_DOWN));
                         
                         
+                    }
+                    
+                    if(analisePortasSPR) {
+                        
+                        String[] PORTAS = null;
+
+                        
+                        System.out.println(pCircuit.getName());                        
+                        
+                        switch(pCircuit.getName()) {
+                            case "s386_n49":
+                                PORTAS = Portas.s386;
+                                break;
+                                
+                            case "s9234_n676":
+                                PORTAS = Portas.s9234;
+                                break;
+                            case "s838_n215":
+                                PORTAS = Portas.s838;
+                                break;
+                            case "s382_n69":
+                                PORTAS = Portas.s382;
+                                break;
+                            case "s400_n64":
+                                PORTAS = Portas.s400;
+                                break;
+                            case "s27_comb_Marcelinho":
+                                PORTAS = Portas.s27;
+                                break;
+                            case "s298_n64":
+                                PORTAS = Portas.s298;
+                                break;
+                            case "s444_n109":
+                                PORTAS = Portas.s444;
+                                break;
+                            case "s344_n61":
+                                PORTAS = Portas.s344;
+                                break;
+                            case "s349_n66":
+                                PORTAS = Portas.s349;
+                                break;
+                            case "s832_n90":
+                                PORTAS = Portas.s832;
+                                break;
+                            case "s13207_n594":
+                                PORTAS = Portas.s13207;
+                                break;
+                            case "s38584_n7656":
+                                PORTAS = Portas.s38584;
+                                break;
+                            case "s510_n78":
+                                PORTAS = Portas.s510;
+                                break;
+                            case "s1488_n75":
+                                PORTAS = Portas.s1488;
+                                break;
+                            case "s820_n95":
+                                PORTAS = Portas.s820;
+                                break;
+                        }
+                        
+                        System.out.println("##################");
+                        System.out.println(pCircuit.getName() + " ==> " + Arrays.toString(PORTAS));
+                        System.out.println("##################");
+                        
+                        String[] TMRs = {
+                            "0.9",
+                            "0.99",
+                            "0.999",
+                            "0.9999",
+                            "0.99999",
+                            "0.999999",                            
+                            "1",
+                        };
+                        
+                        for (String melhoria : TMRs) {
+                            
+                            System.out.println("#######");
+                            System.out.println(melhoria);
+                            System.out.println("#######");
+                            
+                            for (String gate : PORTAS) {
+                                
+                                ProbGate pGate = pCircuit.getProbGateByName(gate);
+                            
+                                if(pGate == null) {
+                                    System.err.println("PORTA " + gate + " NÃO EXISTE NO CIRCUITO " +pCircuit.getName());
+                                } else {
+                                    
+                                    /**
+                                     * SPR-MP
+                                     */
+                                    Terminal.getInstance().getCellLibrary().setPTMCells2(Float.valueOf(reliabilities[i]));
+                                    Terminal.getInstance().getCellLibrary().setPTMCells(new BigDecimal(reliabilities[i]));
+
+                                    pCircuit.clearProbSignalsMatrix();                    
+                                    pCircuit.setDefaultProbSourceSignalMatrix();
+                                    pCircuit.setProbSignalStates(false);                                
+                                    pGate.setGateReliability(new BigDecimal(melhoria));                                                                
+                                    pCircuit.setPTMReliabilityMatrix();
+                                    
+                                    System.out.println(getMTBF(SPRMultiPassV3Ops.getSPRMultiPassReliaiblity(pCircuit)));
+                                    
+                                    pGate.setGateReliability(null);
+                                    
+                                    /**
+                                     * SPR
+                                     */
+                                    Terminal.getInstance().getCellLibrary().setPTMCells2(Float.valueOf(reliabilities[i]));
+                                    Terminal.getInstance().getCellLibrary().setPTMCells(new BigDecimal(reliabilities[i]));
+
+                                    pCircuit.clearProbSignalsMatrix();                    
+                                    pCircuit.setDefaultProbSourceSignalMatrix();
+                                    pCircuit.setProbSignalStates(false);                                
+                                    pGate.setGateReliability(new BigDecimal(melhoria));                                                                
+                                    pCircuit.setPTMReliabilityMatrix();
+                                    
+                                    System.out.println(getMTBF(SPROps.getSPRReliability(pCircuit)));                                   
+                                    pGate.setGateReliability(null);
+                                    
+                                }
+                            }
+                        }                        
+                    }
+                    
+                    if(tiposPortas) {
+                        
+                        ArrayList<ProbGate> probGates = new ArrayList<>();
+                        
+                        for(ProbGate pGate : pCircuit.getProbGates()) {
+                            probGates.add(pGate);
+                        }
+                        
+                        
+                        Collections.sort(probGates, new Comparator<ProbGate>() {
+                            @Override
+                            public int compare(ProbGate pGate1, ProbGate pGate2) {
+                                return pGate1.getId().compareTo(pGate2.getId());
+                            }
+                        });
+                        
+                        System.out.println("######################");
+                        System.out.println(pCircuit.getName());
+                        for(ProbGate fooGate : probGates) {
+                            System.out.println(fooGate);
+                        }
+                        System.out.println("######################");
+                        System.out.println("");
+                        System.out.println("");
+                        
+                        System.out.println("######################");
+                        System.out.println(pCircuit.getName());
+                        for(ProbGate fooGate : probGates) {
+                            System.out.println(fooGate.getType().getName());
+                        }
+                        System.out.println("######################");
+                        System.out.println("");
+                        System.out.println("");
+                        
+                        System.out.println("######################");
+                        System.out.println(pCircuit.getName());
+                        for(ProbGate fooGate : probGates) {
+                            System.out.println(fooGate.getDepth());
+                        }
+                        System.out.println("######################");
+                        System.out.println("");
+                        System.out.println("");
                     }
                 
                     
@@ -3146,6 +3335,75 @@ public class Commands {
         
         
         wFile.CloseFile();
+    }
+    
+    public void Foo8() {
+        
+        String[] circuits = new String[]{
+            "c17_cadence.v", 
+            "c432_cadence.v", 
+            "c499_cadence.v",
+            "c880_cadence.v",
+            "c1355_cadence.v",
+            "c1908_cadence.v",
+            "c2670_cadence.v",
+            "c3540_cadence.v",
+            "c5315_cadence.v",
+            "c6288_cadence.v",
+            "c7552_cadence.v",
+        };
+        
+        String[] reliabilities = new String[]{
+
+            "0.99", 
+            "0.995", 
+            "0.999", 
+            "0.9999", 
+            "0.99999", 
+            "0.999999",             
+        };
+        
+        
+        
+        for (int i = 0; i < circuits.length; i++) {
+            try {
+                Terminal.getInstance().executeCommand("read_verilog "+circuits[i]);          
+                
+                LevelCircuit lCircuit = Terminal.getInstance().getLevelCircuit();
+                ProbCircuit pCircuit = ProbCircuit.create(lCircuit.getName(), lCircuit.getSignals(), lCircuit.getGates(), lCircuit.getGateLevels());
+                
+                System.out.println("CIRCUIT ==> " + pCircuit.getName());
+                System.out.println("níveis " + pCircuit.getProbGateLevels().size());
+                System.out.println("fanouts " + pCircuit.getFanouts().size());
+                System.out.println("portas " + pCircuit.getProbGates().size());
+                System.out.println("");
+                
+                for (int j = 0; j < reliabilities.length; j++) {
+                    Terminal.getInstance().getCellLibrary().setPTMCells2(Float.valueOf(reliabilities[j]));
+                    Terminal.getInstance().getCellLibrary().setPTMCells(new BigDecimal(reliabilities[j]));
+
+                    pCircuit.clearProbSignalsMatrix();                    
+                    pCircuit.setDefaultProbSourceSignalMatrix();
+                    pCircuit.setProbSignalStates(false);
+                    pCircuit.setPTMReliabilityMatrix();
+                    
+                    //System.out.println(SPROpsFloat.getSPRReliability(pCircuit) + " <=== sprFloat");
+                    //System.out.println(inherentReliability(pCircuit, reliabilities[j]).toPlainString() + " <=== INERENTE");
+                    System.out.println("");
+                }
+                
+                
+                
+                
+            } catch (ScriptException ex) {
+                Logger.getLogger(Commands.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            
+            System.out.println("");
+            System.out.println("");
+            System.out.println("");
+        }
+        
     }
     
     
