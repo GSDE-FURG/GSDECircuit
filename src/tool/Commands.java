@@ -3339,6 +3339,8 @@ public class Commands {
     
     public void Foo8() {
         
+        //TESTE!!!
+        
         String[] circuits = new String[]{
             "c17_cadence.v", 
             "c432_cadence.v", 
