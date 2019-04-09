@@ -1250,7 +1250,7 @@ public class Commands {
             for (int j = 0; j < circuits.length; j++) {
                 Terminal.getInstance().executeCommand("read_verilog "+circuits[j]);
                 LevelCircuit lCircuit = Terminal.getInstance().getLevelCircuit();
-                ProbCircuit pCircuit = ProbCircuit.create(lCircuit.getName(), lCircuit.getSignals(), lCircuit.getGates(), lCircuit.getGateLevels());
+                ProbCircuit pCircuit = new ProbCircuit(Terminal.getInstance().getCircuit());
 
                 Map newMap = null;
                 Map newMap2 = null;
@@ -3180,7 +3180,7 @@ public class Commands {
             for (int j = 0; j < circuits.length; j++) {
                 Terminal.getInstance().executeCommand("read_verilog "+circuits[j]);
                 LevelCircuit lCircuit = Terminal.getInstance().getLevelCircuit();
-                ProbCircuit pCircuit = ProbCircuit.create(lCircuit.getName(), lCircuit.getSignals(), lCircuit.getGates(), lCircuit.getGateLevels());
+                ProbCircuit pCircuit = new ProbCircuit(Terminal.getInstance().getCircuit());
                 
                 System.out.println(pCircuit.getName());
                 
@@ -3371,8 +3371,8 @@ public class Commands {
             try {
                 Terminal.getInstance().executeCommand("read_verilog "+circuits[i]);          
                 
-                LevelCircuit lCircuit = Terminal.getInstance().getLevelCircuit();
-                ProbCircuit pCircuit = ProbCircuit.create(lCircuit.getName(), lCircuit.getSignals(), lCircuit.getGates(), lCircuit.getGateLevels());
+                LevelCircuit lCircuit = Terminal.getInstance().getLevelCircuit();                
+                ProbCircuit pCircuit = new ProbCircuit(Terminal.getInstance().getCircuit());
                 
                 System.out.println("CIRCUIT ==> " + pCircuit.getName());
                 System.out.println("níveis " + pCircuit.getProbGateLevels().size());
