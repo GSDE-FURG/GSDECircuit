@@ -3339,12 +3339,175 @@ public class Commands {
     
     public void Foo8() {
         
-        //TESTE!!!
+        final long startTime = System.currentTimeMillis();
         
-        String[] circuits = new String[]{
-            "c17_cadence.v", 
-            "c432_cadence.v", 
-            "c499_cadence.v",
+        ArrayList<Long> timeArray = new ArrayList<>();
+        
+        String[] circuits = new String[]{            
+                   
+//            "circuitoMinas.v",
+//            "nandWithTMR.v",
+            /*
+             *  ISCAS89 VERSAO COMBINACIONAL COMPLETOS
+             */
+//              "s27_comb_Marcelinho.v",
+//              "s208_comb_Marcelinho.v",         
+//              "s298_comb_Marcelinho.v",         
+//              "s344_comb_Marcelinho.v",         
+//              "s349_comb.v",         
+//              "s382_comb.v",         
+//              "s386_comb.v",         
+//              "s400_comb.v",         
+//              "s420_comb.v",         
+//              "s444_comb.v",         
+//              "s510_comb.v",         
+//              "s641_comb.v",         
+//              "s713_comb.v",         
+//              "s820_comb.v",         
+//              "s832_comb.v",         
+//              "s838_comb.v",         
+//              "s953_comb.v",         
+//              "s1196_comb.v",         
+//              "s1238_comb.v",         
+//              "s1423_comb.v",         
+//              "s1488_comb.v",         
+//              "s1494_comb.v",         
+//              "s5378_comb.v",         
+//              "s9234_comb.v",         
+//              "s13207_comb.v",         
+//              "s15850_comb.v",         
+//              "s38417_comb.v",         
+//              "s38584_comb.v",
+              
+            /*
+             * CIRCUITOS UTILIZADOS NA DISSERTACAO
+             * NA COMPARACAO SPR E SPR-MP
+             */
+//              "c17v1_fritz.v",            
+//              "c17v2_fritz.v",            
+//              "c17v3_fritz.v",
+//              "c17v4_fritz.v",
+//              "multiplex-4bits.v", 
+//              "FAv1.v",
+//              "FAv2.v",
+//              "FAv3.v",  
+//              "s27_comb_Marcelinho.v",
+//              "s208_comb_Marcelinho.v",
+//              "s298_n64.v",
+//              "s344_n61.v",
+//              "s349_n66.v",
+//              "s382_n69.v",
+//              "s386_n49.v",
+//              "s400_n64.v",
+//              "s420_Z.v",
+              "s444_n109.v",
+//              "s510_n78.v",
+//              "s641_n178.v",
+//              "s713_n177.v",
+//              "s820_n95.v",              
+//              "s832_n90.v",                         
+//              "s838_n215.v",                           
+//              "s953_n104.v",              
+//              "s1196_G542.v",                          
+//              "s1238_n117.v",                           
+//              "s1423_n90.v",                                                     
+//              "s1488_n75.v",                                                     
+//              "s1494_n70.v",                                                   
+//              "s5378_n240.v",                                                                                                                                                                                                     
+//              "s9234_n676.v",                                                                                                                                                                                                                                                                                                                                                                                                         
+//              "s13207_n594.v",                                                                                                                                                                                                               
+//              "s15850_n460.v",                                                                                                                                                                                              
+//              "s38417_n7962.v",
+//              "s38584_n7656.v",
+            /*
+             * ########################### 
+             */
+            
+            /*
+             * CIRCUITOS UTILIZADOS NA DISSERTACAO
+             * NA ANÁLISE DE PORTAS SPR
+             */
+//              "s9234_n676.v",
+//              "s386_n49.v",
+//              "s838_n215.v", 
+//              "s382_n69.v",
+//              "s400_n64.v",                            
+//              "s27_comb_Marcelinho.v",
+//              "s298_n64.v",
+//              "s444_n109.v",
+//              "s344_n61.v",
+//              "s349_n66.v",
+//              "s832_n90.v",
+//              "s13207_n594.v",
+//              "s38584_n7656.v",
+//              "s510_n78.v",
+//              "s1488_n75.v",
+//              "s820_n95.v",
+//              "s1494_n70.v",
+              
+              
+//              "s208_comb_Marcelinho.v",                                                                                    
+//              "s420_Z.v",              
+//              
+//              "s641_n178.v",
+//              "s713_n177.v",
+//                                                                                                           
+//              "s953_n104.v",              
+//              "s1196_G542.v",                          
+//              "s1238_n117.v",                           
+//              "s1423_n90.v",                                                     
+//                                                                   
+//                                                                 
+//              "s5378_n240.v",                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            
+//                                                                                                                                                                                                                             
+//              "s15850_n460.v",                                                                                                                                                                                              
+//              "s38417_n7962.v",
+//              
+            /*
+             * ########################### 
+             */
+              
+              
+//              "b01_comb.v",
+//            "b02_comb.v",
+//            "b03_comb.v",
+//            "b06_comb.v",
+//            "b06_comb_bench.v",
+//              "s298_comb_Marcelinho.v",
+//              "s344_comb_Marcelinho.v",
+//            "c17Classic.v",
+//            "c17v1_fritz.v",            
+//            "c17v2_fritz.v",            
+//            "c17v3_fritz.v",
+//            "c17v4_fritz.v",
+//            "multiplex-4bits.v", 
+//            "FAv1.v",
+//            "FAv2.v",
+//            "FAv3.v",                                                                                                
+//            "c8_fritz.v",
+//            "c9_fritz.v",                        
+//            "c10_fritz.v",
+//            "c11_fritz.v",
+//            "c20.v",
+//            "fooCircuit2.v",
+//            "c20_cadence_fanout_one.v",
+//            "c432_cadence.v",
+//            "c499_cadence.v",
+//            "c880_cadence.v",
+//            "c1355_cadence.v",
+//            "c1908_cadence.v",
+//            "c2670_cadence.v",
+//            "c3540_cadence.v",
+//            "c5315_cadence.v",
+//            "c6288_cadence.v",
+//            "c7552_cadence.v",
+            
+            
+            
+            
+            //"c432_cadence.v",
+            /*
+            "c499_cadence.v",                                    
             "c880_cadence.v",
             "c1355_cadence.v",
             "c1908_cadence.v",
@@ -3352,59 +3515,20 @@ public class Commands {
             "c3540_cadence.v",
             "c5315_cadence.v",
             "c6288_cadence.v",
-            "c7552_cadence.v",
-        };
-        
-        String[] reliabilities = new String[]{
-
-            "0.99", 
-            "0.995", 
-            "0.999", 
-            "0.9999", 
-            "0.99999", 
-            "0.999999",             
-        };
-        
-        
-        
-        for (int i = 0; i < circuits.length; i++) {
-            try {
-                Terminal.getInstance().executeCommand("read_verilog "+circuits[i]);          
-                
-                LevelCircuit lCircuit = Terminal.getInstance().getLevelCircuit();                
-                ProbCircuit pCircuit = new ProbCircuit(Terminal.getInstance().getCircuit());
-                
-                System.out.println("CIRCUIT ==> " + pCircuit.getName());
-                System.out.println("níveis " + pCircuit.getProbGateLevels().size());
-                System.out.println("fanouts " + pCircuit.getFanouts().size());
-                System.out.println("portas " + pCircuit.getProbGates().size());
-                System.out.println("");
-                
-                for (int j = 0; j < reliabilities.length; j++) {
-                    Terminal.getInstance().getCellLibrary().setPTMCells2(Float.valueOf(reliabilities[j]));
-                    Terminal.getInstance().getCellLibrary().setPTMCells(new BigDecimal(reliabilities[j]));
-
-                    pCircuit.clearProbSignalsMatrix();                    
-                    pCircuit.setDefaultProbSourceSignalMatrix();
-                    pCircuit.setProbSignalStates(false);
-                    pCircuit.setPTMReliabilityMatrix();
-                    
-                    //System.out.println(SPROpsFloat.getSPRReliability(pCircuit) + " <=== sprFloat");
-                    //System.out.println(inherentReliability(pCircuit, reliabilities[j]).toPlainString() + " <=== INERENTE");
-                    System.out.println("");
-                }
-                
-                
-                
-                
-            } catch (ScriptException ex) {
-                Logger.getLogger(Commands.class.getName()).log(Level.SEVERE, null, ex);
-            }
+            */            
+            //"c7552_cadence.v",
             
-            System.out.println("");
-            System.out.println("");
-            System.out.println("");
-        }
+            /*
+            "invAndCircuit.v",
+            
+            "randomCircuit.v",
+            
+            "randomCircuitV2.v",
+            */
+            
+        };
+        
+        System.out.println("mamae");
         
     }
     
