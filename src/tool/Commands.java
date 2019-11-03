@@ -3339,175 +3339,13 @@ public class Commands {
     
     public void Foo8() {
         
-        final long startTime = System.currentTimeMillis();
-        
-        ArrayList<Long> timeArray = new ArrayList<>();
+        Map<String, BigDecimal[][]> schivittzCells = new HashMap<>();
         
         String[] circuits = new String[]{            
                    
-//            "circuitoMinas.v",
-//            "nandWithTMR.v",
-            /*
-             *  ISCAS89 VERSAO COMBINACIONAL COMPLETOS
-             */
-//              "s27_comb_Marcelinho.v",
-//              "s208_comb_Marcelinho.v",         
-//              "s298_comb_Marcelinho.v",         
-//              "s344_comb_Marcelinho.v",         
-//              "s349_comb.v",         
-//              "s382_comb.v",         
-//              "s386_comb.v",         
-//              "s400_comb.v",         
-//              "s420_comb.v",         
-//              "s444_comb.v",         
-//              "s510_comb.v",         
-//              "s641_comb.v",         
-//              "s713_comb.v",         
-//              "s820_comb.v",         
-//              "s832_comb.v",         
-//              "s838_comb.v",         
-//              "s953_comb.v",         
-//              "s1196_comb.v",         
-//              "s1238_comb.v",         
-//              "s1423_comb.v",         
-//              "s1488_comb.v",         
-//              "s1494_comb.v",         
-//              "s5378_comb.v",         
-//              "s9234_comb.v",         
-//              "s13207_comb.v",         
-//              "s15850_comb.v",         
-//              "s38417_comb.v",         
-//              "s38584_comb.v",
-              
-            /*
-             * CIRCUITOS UTILIZADOS NA DISSERTACAO
-             * NA COMPARACAO SPR E SPR-MP
-             */
-//              "c17v1_fritz.v",            
-//              "c17v2_fritz.v",            
-//              "c17v3_fritz.v",
-//              "c17v4_fritz.v",
-//              "multiplex-4bits.v", 
-//              "FAv1.v",
-//              "FAv2.v",
-//              "FAv3.v",  
-//              "s27_comb_Marcelinho.v",
-//              "s208_comb_Marcelinho.v",
-//              "s298_n64.v",
-//              "s344_n61.v",
-//              "s349_n66.v",
-//              "s382_n69.v",
-//              "s386_n49.v",
-//              "s400_n64.v",
-//              "s420_Z.v",
-              "s444_n109.v",
-//              "s510_n78.v",
-//              "s641_n178.v",
-//              "s713_n177.v",
-//              "s820_n95.v",              
-//              "s832_n90.v",                         
-//              "s838_n215.v",                           
-//              "s953_n104.v",              
-//              "s1196_G542.v",                          
-//              "s1238_n117.v",                           
-//              "s1423_n90.v",                                                     
-//              "s1488_n75.v",                                                     
-//              "s1494_n70.v",                                                   
-//              "s5378_n240.v",                                                                                                                                                                                                     
-//              "s9234_n676.v",                                                                                                                                                                                                                                                                                                                                                                                                         
-//              "s13207_n594.v",                                                                                                                                                                                                               
-//              "s15850_n460.v",                                                                                                                                                                                              
-//              "s38417_n7962.v",
-//              "s38584_n7656.v",
-            /*
-             * ########################### 
-             */
-            
-            /*
-             * CIRCUITOS UTILIZADOS NA DISSERTACAO
-             * NA ANÁLISE DE PORTAS SPR
-             */
-//              "s9234_n676.v",
-//              "s386_n49.v",
-//              "s838_n215.v", 
-//              "s382_n69.v",
-//              "s400_n64.v",                            
-//              "s27_comb_Marcelinho.v",
-//              "s298_n64.v",
-//              "s444_n109.v",
-//              "s344_n61.v",
-//              "s349_n66.v",
-//              "s832_n90.v",
-//              "s13207_n594.v",
-//              "s38584_n7656.v",
-//              "s510_n78.v",
-//              "s1488_n75.v",
-//              "s820_n95.v",
-//              "s1494_n70.v",
-              
-              
-//              "s208_comb_Marcelinho.v",                                                                                    
-//              "s420_Z.v",              
-//              
-//              "s641_n178.v",
-//              "s713_n177.v",
-//                                                                                                           
-//              "s953_n104.v",              
-//              "s1196_G542.v",                          
-//              "s1238_n117.v",                           
-//              "s1423_n90.v",                                                     
-//                                                                   
-//                                                                 
-//              "s5378_n240.v",                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            
-//                                                                                                                                                                                                                             
-//              "s15850_n460.v",                                                                                                                                                                                              
-//              "s38417_n7962.v",
-//              
-            /*
-             * ########################### 
-             */
-              
-              
-//              "b01_comb.v",
-//            "b02_comb.v",
-//            "b03_comb.v",
-//            "b06_comb.v",
-//            "b06_comb_bench.v",
-//              "s298_comb_Marcelinho.v",
-//              "s344_comb_Marcelinho.v",
-//            "c17Classic.v",
-//            "c17v1_fritz.v",            
-//            "c17v2_fritz.v",            
-//            "c17v3_fritz.v",
-//            "c17v4_fritz.v",
-//            "multiplex-4bits.v", 
-//            "FAv1.v",
-//            "FAv2.v",
-//            "FAv3.v",                                                                                                
-//            "c8_fritz.v",
-//            "c9_fritz.v",                        
-//            "c10_fritz.v",
-//            "c11_fritz.v",
-//            "c20.v",
-//            "fooCircuit2.v",
-//            "c20_cadence_fanout_one.v",
-//            "c432_cadence.v",
-//            "c499_cadence.v",
-//            "c880_cadence.v",
-//            "c1355_cadence.v",
-//            "c1908_cadence.v",
-//            "c2670_cadence.v",
-//            "c3540_cadence.v",
-//            "c5315_cadence.v",
-//            "c6288_cadence.v",
-//            "c7552_cadence.v",
-            
-            
-            
-            
-            //"c432_cadence.v",
-            /*
-            "c499_cadence.v",                                    
+            "c17Classic.v",
+            "c432_cadence.v",
+            "c499_cadence.v",
             "c880_cadence.v",
             "c1355_cadence.v",
             "c1908_cadence.v",
@@ -3515,22 +3353,91 @@ public class Commands {
             "c3540_cadence.v",
             "c5315_cadence.v",
             "c6288_cadence.v",
-            */            
-            //"c7552_cadence.v",
-            
-            /*
-            "invAndCircuit.v",
-            
-            "randomCircuit.v",
-            
-            "randomCircuitV2.v",
-            */
-            
+            "c7552_cadence.v",
         };
         
-        System.out.println("mamae");
+        BigDecimal classicReliability = new BigDecimal("0.999999");
+        String schivittzCellsFile = "15nm.txt";
         
+        
+        schivittzCells = ReadTxt.readSchivittzCells(schivittzCellsFile);
+        Terminal.getInstance().getCellLibrary().setPTMCells(classicReliability);
+        
+        for(Cell cell: Terminal.getInstance().getCellLibrary().getCells()) {
+            System.out.println("Cell: " + cell.getName());
+            for (int i = 0; i < cell.getPTM().length; i++) {
+                for (int j = 0; j < cell.getPTM()[0].length; j++) {
+                    System.out.println("[" + i + "]["+j+"] == " + cell.getPTM()[i][j]);
+                }
+            }
+        }
+        
+        System.out.println("############################");
+        for (String porta: schivittzCells.keySet()) {
+            BigDecimal[][] fooMatrix = schivittzCells.get(porta);
+            System.out.println("Cell: " + porta);
+            for (int i = 0; i < fooMatrix.length; i++) {
+                for (int j = 0; j < fooMatrix[0].length; j++) {
+                    System.out.println("[" + i + "]["+j+"] == " + fooMatrix[i][j]);
+                }
+            }
+        }
+        
+        for (int j = 0; j < circuits.length; j++) {
+            try {
+                Terminal.getInstance().executeCommand("read_verilog "+circuits[j]);
+            } catch (ScriptException ex) {
+                Logger.getLogger(Commands.class.getName()).log(Level.SEVERE, null, ex);
+            }            
+            ProbCircuit pCircuit = new ProbCircuit(Terminal.getInstance().getCircuit());
+            
+            System.out.println("Circuit: " + pCircuit.getName());
+            
+            for (int i = 0; i < pCircuit.getProbGates().size(); i++) {
+                String cellName = pCircuit.getProbGates().get(i).getType().getName();
+                
+                if(schivittzCells.get(cellName) != null) {
+                    pCircuit.getProbGates().get(i).setReliabilityMatrix(schivittzCells.get(cellName));                
+//                    System.out.println("CellName: " + cellName);                
+//                    for (int k = 0; k < pCircuit.getProbGates().get(i).getReliabilityMatrix().length; k++) {
+//                        for (int l = 0; l < pCircuit.getProbGates().get(i).getReliabilityMatrix()[0].length; l++) {
+//                            System.out.println(k + "--" + l + " ==> " + pCircuit.getProbGates().get(i).getReliabilityMatrix()[k][l]);
+//                        }
+//                    }
+                }               
+            }
+            
+            /*
+            ** Coloca 0.5 nas probabilidades de 0 e 1 corretos nos sinais de entrada
+            */
+            pCircuit.setDefaultProbSourceSignalMatrix();            
+            
+            /*
+            ** Coloca as matrizes PTM nas portas, somente se essa ainda não tiver setada
+            */
+            pCircuit.setPTMsReliabilityMatrix();
+            
+            System.out.println("SPR Schivittz: " + SPROps.getSPRReliability(pCircuit));
+            
+            /*
+            ** Seta "null" nas matrizes dos sinais
+            */
+            pCircuit.clearProbSignalsMatrix();
+            
+            pCircuit.setDefaultProbSourceSignalMatrix();            
+            
+            /*
+            ** Seta "null" nas matrizes de confiabilidade das portas
+            */
+            pCircuit.clearProbGatesReliabilitiesMatrix();
+            pCircuit.setPTMsReliabilityMatrix();
+            
+            System.out.println("SPR Normal:    " + SPROps.getSPRReliability(pCircuit));
+            System.out.println("");
+        }               
     }
+    
+    
     
     
     
