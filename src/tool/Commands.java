@@ -3362,25 +3362,25 @@ public class Commands {
         schivittzCells = ReadTxt.readSchivittzCells(schivittzCellsFile);
         Terminal.getInstance().getCellLibrary().setPTMCells(classicReliability);
         
-        for(Cell cell: Terminal.getInstance().getCellLibrary().getCells()) {
-            System.out.println("Cell: " + cell.getName());
-            for (int i = 0; i < cell.getPTM().length; i++) {
-                for (int j = 0; j < cell.getPTM()[0].length; j++) {
-                    System.out.println("[" + i + "]["+j+"] == " + cell.getPTM()[i][j]);
-                }
-            }
-        }
-        
-        System.out.println("############################");
-        for (String porta: schivittzCells.keySet()) {
-            BigDecimal[][] fooMatrix = schivittzCells.get(porta);
-            System.out.println("Cell: " + porta);
-            for (int i = 0; i < fooMatrix.length; i++) {
-                for (int j = 0; j < fooMatrix[0].length; j++) {
-                    System.out.println("[" + i + "]["+j+"] == " + fooMatrix[i][j]);
-                }
-            }
-        }
+//        for(Cell cell: Terminal.getInstance().getCellLibrary().getCells()) {
+//            System.out.println("Cell: " + cell.getName());
+//            for (int i = 0; i < cell.getPTM().length; i++) {
+//                for (int j = 0; j < cell.getPTM()[0].length; j++) {
+//                    System.out.println("[" + i + "]["+j+"] == " + cell.getPTM()[i][j]);
+//                }
+//            }
+//        }
+//        
+//        System.out.println("############################");
+//        for (String porta: schivittzCells.keySet()) {
+//            BigDecimal[][] fooMatrix = schivittzCells.get(porta);
+//            System.out.println("Cell: " + porta);
+//            for (int i = 0; i < fooMatrix.length; i++) {
+//                for (int j = 0; j < fooMatrix[0].length; j++) {
+//                    System.out.println("[" + i + "]["+j+"] == " + fooMatrix[i][j]);
+//                }
+//            }
+//        }
         
         for (int j = 0; j < circuits.length; j++) {
             try {
