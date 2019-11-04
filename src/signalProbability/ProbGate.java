@@ -167,11 +167,6 @@ public class ProbGate extends Gate {
 
     public void setGateReliability(BigDecimal gateReliability) {
         this.gateReliability = gateReliability;
-    }
-    
-    public void clearGateReliabilityMatrix() {
-        this.reliabilityMatrix = null;
-        this.reliabilityMatrix2 = null;
-    }
+    }        
         
 }

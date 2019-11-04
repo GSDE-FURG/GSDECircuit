@@ -6,17 +6,8 @@
 package readers;
 
 import java.io.BufferedReader;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 
 /**
  *
@@ -46,60 +37,6 @@ public class ReadTxt {
             }
                         
         return itm;
-    }
-    
-    public static Map<String, BigDecimal[][]> readSchivittzCells(String pathFile) {
-        BufferedReader br = null;        
-        String line;
-        Map<String, BigDecimal[][]> schivittzCells = new HashMap<>();
-
-        try {
-            br = new BufferedReader(new FileReader(pathFile));
-        } catch (FileNotFoundException ex) {
-            Logger.getLogger(ReadTxt.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-        try {
-            while ((line = br.readLine()) != null) {
-                String[] arrayLinha = line.split("\\s");                           
-                String cellName = arrayLinha[0];
-                ArrayList<ArrayList<BigDecimal>> reliabilies = new ArrayList<ArrayList<BigDecimal>>();
-                
-                int counter = 0;
-                for (int i = 1; i < arrayLinha.length; i++) {                    
-                    
-                    if((i % 2) == 0) {
-                        reliabilies.get(counter).add(new BigDecimal(arrayLinha[i]));
-                        counter = counter + 1;
-                        
-                    } else {
-                        reliabilies.add(new ArrayList<>());
-                        reliabilies.get(counter).add(new BigDecimal(arrayLinha[i]));
-                    }
-                }
-                
-                BigDecimal[][] convertedReliabilities = new BigDecimal[reliabilies.size()][reliabilies.get(0).size()];
-                
-                for (int i = 0; i < reliabilies.size(); i++) {
-                    for (int j = 0; j < reliabilies.get(0).size(); j++) {
-                        convertedReliabilities[i][j] = reliabilies.get(i).get(j);
-                    }
-                }
-                
-//                for (int i = 0; i < convertedReliabilities.length; i++) {
-//                    for (int j = 0; j < convertedReliabilities[0].length; j++) {
-//                        System.out.println("[" + i + "][" + j + "] == " + convertedReliabilities[i][j]);
-//                    }
-//                }
-                
-               schivittzCells.put(cellName, convertedReliabilities);
-                
-            }
-        } catch (IOException ex) {
-            Logger.getLogger(ReadTxt.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        
-        return schivittzCells;     
     }
     
 }
