@@ -151,7 +151,10 @@ public class ProbGate extends Gate {
         this.reliabilityMatrix2 = reliabilityMatrix2;
     }
     
-    
+    public void clearGateReliabilityMatrix() {
+        this.reliabilityMatrix = null;
+        this.reliabilityMatrix2 = null;
+    }
 
     public int getDepth() {
         return depth;

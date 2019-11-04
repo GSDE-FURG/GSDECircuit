@@ -478,6 +478,18 @@ public class ProbCircuit extends Circuit {
         }
     }
     
+    /*
+    ** Desenvolvi para gerar os resultados para o Schivittz 03/11/2019
+    */
+    public void setPTMsReliabilityMatrix() {
+        
+        for(ProbGate pGate : this.probGates) {            
+            if(pGate.getReliabilityMatrix() == null) {
+                pGate.setReliabilityMatrix(pGate.getType().getPTM());
+            }
+        }
+    }
+    
     public void makeProbInterLevels() {
         
         for (int i = 0; i < this.probGateLevels.size(); i++) {
@@ -598,6 +610,12 @@ public class ProbCircuit extends Circuit {
     public void clearProbSignalsMatrix() {
         for (int i = 0; i < this.probSignals.size(); i++) {
             this.probSignals.get(i).setProbMatrixFloat(null);
+        }
+    }
+    
+    public void clearProbGatesReliabilitiesMatrix() {
+        for (int i = 0; i < this.probGates.size(); i++) {
+            this.probGates.get(i).clearGateReliabilityMatrix();
         }
     }
     
