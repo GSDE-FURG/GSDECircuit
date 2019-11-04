@@ -16,7 +16,7 @@ import java.io.IOException;
 public class ReadTxt {
     
     public int[] readFile(String file, int size) throws IOException {
-
+        //teste
         BufferedReader br = null;
         String path = file;
         String line;
