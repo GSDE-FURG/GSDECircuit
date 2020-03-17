@@ -3342,17 +3342,18 @@ public class Commands {
         
         String[] circuits = new String[]{            
                    
-            "c17Classic.v",
-            "c432_cadence.v",
-            "c499_cadence.v",
-            "c880_cadence.v",
-            "c1355_cadence.v",
-            "c1908_cadence.v",
-            "c2670_cadence.v",
-            "c3540_cadence.v",
-            "c5315_cadence.v",
-            "c6288_cadence.v",
-            "c7552_cadence.v",
+//            "c17Classic.v",
+//            "c432_cadence.v",
+//            "c499_cadence.v",
+//            "c880_cadence.v",
+//            "c1355_cadence.v",
+//            "c1908_cadence.v",
+//            "c2670_cadence.v",
+//            "c3540_cadence.v",
+//            "c5315_cadence.v",
+//            "c6288_cadence.v",
+//            "c7552_cadence.v",
+            "c2670_schiv.v",
         };
         
         BigDecimal classicReliability = new BigDecimal("0.999999");
