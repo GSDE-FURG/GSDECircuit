@@ -1,1 +1,2 @@
-# GSDECircuit
+# GSDECircuit - GRAPHIC USER INTERFACE (Clayton)
+
