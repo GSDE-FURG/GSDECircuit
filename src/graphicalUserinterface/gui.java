@@ -7,19 +7,29 @@ package graphicalUserinterface;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.GraphicsConfiguration;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeListener;
 import java.io.File;
+import static java.lang.System.gc;
 import java.text.ParseException;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.script.ScriptException;
+import javax.swing.BorderFactory;
+import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JEditorPane;
 import javax.swing.JFileChooser;
 import javax.swing.JFormattedTextField;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
@@ -214,7 +224,104 @@ public class gui extends javax.swing.JFrame {
             try {
                 //Running PTM mode Command
                 cmdprocessor.processCmd(ptmModeselected + " " + reliability);
-                System.out.println("RESULTADO FINALLLLLLLL : "+ cmdprocessor.getcommandoutput());
+                
+                GraphicsConfiguration gc = null;
+                
+                
+               //NEXT STEP IS CREATE THE OUTPUT IN THE BOX
+               
+               JFrame.setDefaultLookAndFeelDecorated(true);
+               
+               
+        JFrame frame = new JFrame(" - Result -");
+        //frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setPreferredSize(new Dimension(600, 600));
+         
+        // Define new buttons with different width on help of the ---
+        
+        JLabel teste = new JLabel(cmdprocessor.getcommandoutput());
+        
+        
+        JEditorPane field = new JEditorPane();
+        field.setContentType("text/html");
+        field.setText("<html><a href='saida'> " + cmdprocessor.getcommandoutput() + "</a> </html>");
+        field.setEditable(false);
+        field.setBorder(null);
+        field.setOpaque(false);
+        /*
+        JButton jb1 = new JButton("Button 1 -");        
+        JButton jb2 = new JButton("Button 2 --------");
+        JButton jb3 = new JButton("Button 3 -");        
+        JButton jb4 = new JButton("Button 4 --------");
+        JButton jb5 = new JButton("Button 5 -");        
+        JButton jb6 = new JButton("Button 6 --------");
+        
+        */
+         
+        
+        // Define the panel to hold the buttons 
+        JPanel panel1 = new JPanel();
+        JPanel panel2 = new JPanel();
+        JPanel panel3 = new JPanel();
+         
+        // Set up the title for different panels
+        panel1.setBorder(BorderFactory.createTitledBorder("RESULT:::"));
+        panel2.setBorder(BorderFactory.createTitledBorder("CENTER"));
+        panel3.setBorder(BorderFactory.createTitledBorder("RIGHT"));
+         
+        // Set up the BoxLayout
+        BoxLayout layout1 = new BoxLayout(panel1, BoxLayout.Y_AXIS);
+        BoxLayout layout2 = new BoxLayout(panel2, BoxLayout.Y_AXIS);
+        BoxLayout layout3 = new BoxLayout(panel3, BoxLayout.Y_AXIS);
+        panel1.setLayout(layout1);
+        panel2.setLayout(layout2);
+        panel3.setLayout(layout3);
+         
+        // Add the buttons into the panel with three different alignment options
+        
+        teste.setAlignmentX(Component.LEFT_ALIGNMENT);
+        field.setAlignmentX(Component.LEFT_ALIGNMENT);
+        panel1.add(field);
+        //panel1.add(teste);
+        
+        
+        /*
+        jb1.setAlignmentX(Component.LEFT_ALIGNMENT);
+        jb2.setAlignmentX(Component.LEFT_ALIGNMENT);
+        panel1.add(jb1);
+        panel1.add(jb2);
+         
+        jb3.setAlignmentX(Component.CENTER_ALIGNMENT);
+        jb4.setAlignmentX(Component.CENTER_ALIGNMENT);
+        panel2.add(jb3);
+        panel2.add(jb4);
+         
+        jb5.setAlignmentX(Component.RIGHT_ALIGNMENT);
+        jb6.setAlignmentX(Component.RIGHT_ALIGNMENT);
+        panel3.add(jb5);
+        panel3.add(jb6);
+        
+        
+        frame.add(panel2);
+        frame.add(panel3);
+        */
+         
+        // Add the three panels into the frame
+        frame.setLayout(new FlowLayout());
+        frame.add(panel1);
+        
+         
+        // Set the window to be visible as the default to be false
+        frame.pack();
+        frame.setVisible(true);
+         
+    
+                
+                
+                  //JOptionPane.showMessageDialog(null, cmdprocessor.getcommandoutput());
+                
+                  JOptionPane.showMessageDialog(null, cmdprocessor.getcommandoutput(), "GSDECircuit: " , JOptionPane.INFORMATION_MESSAGE);
+                //System.out.println("RESULTADO FINALLLLLLLL : "+ cmdprocessor.getcommandoutput());
                 
             } catch (ScriptException ex) {
                 Logger.getLogger(gui.class.getName()).log(Level.SEVERE, null, ex);
