@@ -1250,7 +1250,7 @@ public class Commands {
             for (int j = 0; j < circuits.length; j++) {
                 Terminal.getInstance().executeCommand("read_verilog "+circuits[j]);
                 LevelCircuit lCircuit = Terminal.getInstance().getLevelCircuit();
-                ProbCircuit pCircuit = ProbCircuit.create(lCircuit.getName(), lCircuit.getSignals(), lCircuit.getGates(), lCircuit.getGateLevels());
+                ProbCircuit pCircuit = new ProbCircuit(Terminal.getInstance().getCircuit());
 
                 Map newMap = null;
                 Map newMap2 = null;
@@ -3180,7 +3180,7 @@ public class Commands {
             for (int j = 0; j < circuits.length; j++) {
                 Terminal.getInstance().executeCommand("read_verilog "+circuits[j]);
                 LevelCircuit lCircuit = Terminal.getInstance().getLevelCircuit();
-                ProbCircuit pCircuit = ProbCircuit.create(lCircuit.getName(), lCircuit.getSignals(), lCircuit.getGates(), lCircuit.getGateLevels());
+                ProbCircuit pCircuit = new ProbCircuit(Terminal.getInstance().getCircuit());
                 
                 System.out.println(pCircuit.getName());
                 
@@ -3337,75 +3337,104 @@ public class Commands {
         wFile.CloseFile();
     }
     
-    public void Foo8() {
+    public void Foo8() {                
+        Map<String, BigDecimal[][]> schivittzCells = new HashMap<>();
         
-        //TESTE!!!
-        
-        String[] circuits = new String[]{
-            "c17_cadence.v", 
-            "c432_cadence.v", 
-            "c499_cadence.v",
-            "c880_cadence.v",
-            "c1355_cadence.v",
-            "c1908_cadence.v",
-            "c2670_cadence.v",
-            "c3540_cadence.v",
-            "c5315_cadence.v",
-            "c6288_cadence.v",
-            "c7552_cadence.v",
+        String[] circuits = new String[]{            
+                   
+//            "c17Classic.v",
+//            "c432_cadence.v",
+//            "c499_cadence.v",
+//            "c880_cadence.v",
+//            "c1355_cadence.v",
+//            "c1908_cadence.v",
+//            "c2670_cadence.v",
+//            "c3540_cadence.v",
+//            "c5315_cadence.v",
+//            "c6288_cadence.v",
+//            "c7552_cadence.v",
+            "c2670_schiv.v",
         };
         
-        String[] reliabilities = new String[]{
-
-            "0.99", 
-            "0.995", 
-            "0.999", 
-            "0.9999", 
-            "0.99999", 
-            "0.999999",             
-        };
+        BigDecimal classicReliability = new BigDecimal("0.999999");
+        String schivittzCellsFile = "15nm.txt";
         
         
+        schivittzCells = ReadTxt.readSchivittzCells(schivittzCellsFile);
+        Terminal.getInstance().getCellLibrary().setPTMCells(classicReliability);
         
-        for (int i = 0; i < circuits.length; i++) {
+//        for(Cell cell: Terminal.getInstance().getCellLibrary().getCells()) {
+//            System.out.println("Cell: " + cell.getName());
+//            for (int i = 0; i < cell.getPTM().length; i++) {
+//                for (int j = 0; j < cell.getPTM()[0].length; j++) {
+//                    System.out.println("[" + i + "]["+j+"] == " + cell.getPTM()[i][j]);
+//                }
+//            }
+//        }
+//        
+//        System.out.println("############################");
+//        for (String porta: schivittzCells.keySet()) {
+//            BigDecimal[][] fooMatrix = schivittzCells.get(porta);
+//            System.out.println("Cell: " + porta);
+//            for (int i = 0; i < fooMatrix.length; i++) {
+//                for (int j = 0; j < fooMatrix[0].length; j++) {
+//                    System.out.println("[" + i + "]["+j+"] == " + fooMatrix[i][j]);
+//                }
+//            }
+//        }
+        
+        for (int j = 0; j < circuits.length; j++) {
             try {
-                Terminal.getInstance().executeCommand("read_verilog "+circuits[i]);          
-                
-                LevelCircuit lCircuit = Terminal.getInstance().getLevelCircuit();
-                ProbCircuit pCircuit = ProbCircuit.create(lCircuit.getName(), lCircuit.getSignals(), lCircuit.getGates(), lCircuit.getGateLevels());
-                
-                System.out.println("CIRCUIT ==> " + pCircuit.getName());
-                System.out.println("níveis " + pCircuit.getProbGateLevels().size());
-                System.out.println("fanouts " + pCircuit.getFanouts().size());
-                System.out.println("portas " + pCircuit.getProbGates().size());
-                System.out.println("");
-                
-                for (int j = 0; j < reliabilities.length; j++) {
-                    Terminal.getInstance().getCellLibrary().setPTMCells2(Float.valueOf(reliabilities[j]));
-                    Terminal.getInstance().getCellLibrary().setPTMCells(new BigDecimal(reliabilities[j]));
-
-                    pCircuit.clearProbSignalsMatrix();                    
-                    pCircuit.setDefaultProbSourceSignalMatrix();
-                    pCircuit.setProbSignalStates(false);
-                    pCircuit.setPTMReliabilityMatrix();
-                    
-                    //System.out.println(SPROpsFloat.getSPRReliability(pCircuit) + " <=== sprFloat");
-                    //System.out.println(inherentReliability(pCircuit, reliabilities[j]).toPlainString() + " <=== INERENTE");
-                    System.out.println("");
-                }
-                
-                
-                
-                
+                Terminal.getInstance().executeCommand("read_verilog "+circuits[j]);
             } catch (ScriptException ex) {
                 Logger.getLogger(Commands.class.getName()).log(Level.SEVERE, null, ex);
+            }            
+            ProbCircuit pCircuit = new ProbCircuit(Terminal.getInstance().getCircuit());
+            
+            System.out.println("Circuit: " + pCircuit.getName());
+            
+            for (int i = 0; i < pCircuit.getProbGates().size(); i++) {
+                String cellName = pCircuit.getProbGates().get(i).getType().getName();
+                
+                if(schivittzCells.get(cellName) != null) {
+                    pCircuit.getProbGates().get(i).setReliabilityMatrix(schivittzCells.get(cellName));                
+//                    System.out.println("CellName: " + cellName);                
+//                    for (int k = 0; k < pCircuit.getProbGates().get(i).getReliabilityMatrix().length; k++) {
+//                        for (int l = 0; l < pCircuit.getProbGates().get(i).getReliabilityMatrix()[0].length; l++) {
+//                            System.out.println(k + "--" + l + " ==> " + pCircuit.getProbGates().get(i).getReliabilityMatrix()[k][l]);
+//                        }
+//                    }
+                }               
             }
             
-            System.out.println("");
-            System.out.println("");
+            /*
+            ** Coloca 0.5 nas probabilidades de 0 e 1 corretos nos sinais de entrada
+            */
+            pCircuit.setDefaultProbSourceSignalMatrix();            
+            
+            /*
+            ** Coloca as matrizes PTM nas portas, somente se essa ainda não tiver setada
+            */
+            pCircuit.setPTMsReliabilityMatrix();
+            
+            System.out.println("SPR Schivittz: " + SPROps.getSPRReliability(pCircuit));
+            
+            /*
+            ** Seta "null" nas matrizes dos sinais
+            */
+            pCircuit.clearProbSignalsMatrix();
+            
+            pCircuit.setDefaultProbSourceSignalMatrix();            
+            
+            /*
+            ** Seta "null" nas matrizes de confiabilidade das portas
+            */
+            pCircuit.clearProbGatesReliabilitiesMatrix();
+            pCircuit.setPTMsReliabilityMatrix();
+            
+            System.out.println("SPR Normal:    " + SPROps.getSPRReliability(pCircuit));
             System.out.println("");
         }
-        
     }
     
     
