@@ -36,6 +36,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
@@ -99,6 +100,11 @@ import static ops.CommonOps.inherentReliabilityFloat;
 import ops.FanoutOps;
 import ops.SPRMultiPassV3Ops;
 import tool.Portas;
+import wrv_algoritm.InputVector;
+import wrv_algoritm.RunScore;
+import wrv_algoritm.ScoreBySPR;
+import wrv_algoritm.Utils;
+import wrv_algoritm.WRVAlgoritm;
 
 /**
  *
@@ -3533,6 +3539,46 @@ public class Commands {
         BigInteger result = timeAccumulator.divide(new BigInteger(Integer.toString(cycles)));
         
         System.out.println("Reliability (" + reliability + ") of circuit " + pCircuit.getName() + "by " + method +  " method is " + properties[0] + ",  TIME CONSUPTION (" + properties[1] + ") was " + result + " in a " + cycles + " cycles average");
+    }
+    
+    public void createSubCircuits() {
+        Utils.createSubCircuits();
+    }
+    
+    public void getOrderedGates(String q, String newQ){
+        //obter uma lista de portas em ordem crítica
+        Utils.getOrderedGates(q, newQ);
+    }
+    
+    public void getOrderedGatesByWRV(InputVector iv, String q, String newQ) {
+        //obter uma lista de portas em ordem crítica do vetor crítico
+        Utils.orderedGatesByWRV(iv, q, newQ);
+    }
+    
+    public void getReliabilityByImprovementGate(String q, String newQ) {
+        //melhoria da confiabilidade do circuito ao proteger as portas críticas
+        Map<ProbGate, BigDecimal> orderedGates = Utils.getOrderedGates(q, newQ);
+        List<ProbGate> listGates = new ArrayList<>(orderedGates.keySet());
+        Utils.getReliabilityByImprovementGate(listGates, q, newQ);
+    }
+    
+    public void getWorstReliabilityVector(String q) {  
+        
+        //configura o método SPR para executar os cálculos de confiabilidade
+        RunScore runScore = new ScoreBySPR(new BigDecimal(q));
+        //cria o algoritmo para identificação do vetor crítico
+        //passando o método de cálculo
+        WRVAlgoritm wrvalg = new WRVAlgoritm(runScore); 
+        //executa o algoritmo
+        //retorna um InputVector
+        wrvalg.execute();          
+        
+    }
+    
+    public void getAreaCostWithTMR(String q, String newQ) {        
+        //obtem a quantidade de portas ao aplicar um TMR no circuito
+        Map<ProbGate, BigDecimal> orderedGates = Utils.getOrderedGates(q, newQ);
+        Utils.getAreaCostWithTMR(orderedGates);
     }
     
 }
