@@ -79,6 +79,14 @@ class CommandProcessor {
                 }
                 break;
 
+            case "create-subcircuit":
+                if (argument.isEmpty()) {
+                    cmd.createSubCircuits();
+                } else if (help) {
+                    Terminal.getInstance().terminalOutput(cmd.getHelpDesc(mainCommand));
+                }
+                break;
+                
             case "print_wrv":
                 if (argument.isEmpty()) {
                     Terminal.getInstance().terminalOutput("Please use the arg \"--help\"");
