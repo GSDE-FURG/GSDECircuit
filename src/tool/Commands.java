@@ -29,36 +29,25 @@ import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.BitSet;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.TreeMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import ops.CommonOps;
 
-import static ops.CommonOps.getKronecker;
-import static ops.CommonOps.getMultipliedMatrix;
 import static ops.CommonOps.matrixPrint;
-import static ops.CommonOps.getCombVectors;
-import static ops.CommonOps.inherentReliability;
 import static ops.CommonOps.getITM;
-import static ops.OperartionCounters.getTotalOperationsSerialPTM;
 import static ops.CommonOps.sortByValue;
 
 
-import static ops.SPROps.getSPRReliability;
 
 import ops.PTMOps;
 
@@ -73,36 +62,26 @@ import ops.PTMOps2Float;
 import ops.SPROps;
 import ops.SPROpsFloat;
 import ops.SerialPTMOpsFloat;
-import ops.OperartionCounters;
 import ops.SPRMultiPassV2BigDecimalOps;
 import ops.SPRMultiPassV2Ops;
 import ops.SerialPTMOpsFloatOptized;
 
 import readers.ReadTxt;
-import schivittz.Grafo;
-import schivittz.Interface;
-import static schivittz.Interface.mostraPTM;
-import schivittz.LeArquivo;
 import signalProbability.ProbCircuit;
 import signalProbability.ProbGate;
-import signalProbability.ProbGateLevel;
-import signalProbability.ProbInterLevel;
 import signalProbability.ProbSignal;
 
 
 import writers.GenlibWriter;
 import writers.VerilogWriter;
 import writers.WriteFile;
-import static ops.CommonOps.getFailureRate;
 import static ops.CommonOps.getMTBF;
-import static ops.CommonOps.getFIT;
-import static ops.CommonOps.inherentReliabilityFloat;
 import ops.FanoutOps;
 import ops.SPRMultiPassV3Ops;
-import tool.Portas;
 import wrv_algoritm.InputVector;
 import wrv_algoritm.RunScore;
 import wrv_algoritm.ScoreBySPR;
+import wrv_algoritm.ScoreCount;
 import wrv_algoritm.Utils;
 import wrv_algoritm.WRVAlgoritm;
 
@@ -3581,4 +3560,19 @@ public class Commands {
         Utils.getAreaCostWithTMR(orderedGates);
     }
     
+    public void executeScoreCount() {
+        RunScore runScore = new ScoreCount();
+        ProbCircuit circuit = Terminal.getInstance().getProbCircuit();
+        ArrayList<ProbSignal> inputs = circuit.getProbInputs();
+        int inputLength;
+        if (inputs.size() > 24) {
+            inputLength = (int) Math.pow(2, 24);
+        } else {
+            inputLength = (int) Math.pow(2, inputs.size());
+        }
+        for (int i = 0; i < inputLength; i++) {            
+            InputVector iv = new InputVector(new BigInteger(String.valueOf(i), 10));
+            System.out.println(i + ";" + iv.getBinaryString() + ";" + runScore.execute(iv).getScore());
+        }
+    }    
 }

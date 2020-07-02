@@ -13,6 +13,7 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.math.RoundingMode;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -178,7 +179,7 @@ public abstract class Utils {
         pCircuit.clearProbSignalsMatrix();
         pCircuit.setDefaultProbSourceSignalMatrix();
         pCircuit.setPTMReliabilityMatrix();
-        //List<ProbGate> listGates = new ArrayList<>(orderedGates.keySet());
+        //List<ProbGate> listGates = new ArrayList<>(orderedGates);
         System.out.println("Improved Gates;R (More critical order);MTBF (More critical order)");
         System.out.println("0;" + SPROps.getSPRReliability(pCircuit) + ";" + CommonOps.getMTBF(SPROps.getSPRReliability(pCircuit)).intValue());
         //Collections.shuffle(listGates);

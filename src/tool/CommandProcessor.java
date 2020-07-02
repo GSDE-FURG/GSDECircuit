@@ -106,6 +106,14 @@ class CommandProcessor {
                     cmd.getOrderedGates(argument, argument2);
                 }
                 break;
+                
+                case "execute_score_count":
+                if (argument.isEmpty()) {
+                    cmd.executeScoreCount();
+                } else if (help) {
+                    Terminal.getInstance().terminalOutput(cmd.getHelpDesc(mainCommand));
+                }
+                break;
 
             case "print_cost_area":
                 if (argument.isEmpty()) {
