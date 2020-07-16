@@ -109,7 +109,7 @@ public class SPROps {
                     } else {                    
                         matrix = pGate.getpInputs().get(0).getProbMatrix();
                         if(pGate.getpInputs().size() > 1) { 
-                            for (int k = 1; k < pGate.getpInputs().size(); k++) {                            
+                            for (int k = 1; k < pGate.getpInputs().size(); k++) {
                                 matrix = getKronecker(matrix, pGate.getpInputs().get(k).getProbMatrix());                           
                             }
                         }

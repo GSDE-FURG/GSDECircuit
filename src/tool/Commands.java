@@ -440,7 +440,7 @@ public class Commands {
         String result = "";
         LevelCircuit lcirc = Terminal.getInstance().getLevelCircuit();        
         CellLibrary cellLib = Terminal.getInstance().getCellLibrary();
-        ProbCircuit pCircuit = Terminal.getInstance().getProbCircuit();         
+        ProbCircuit pCircuit = Terminal.getInstance().getProbCircuit();
         cellLib.setPTMCells2(Float.valueOf(reliability));
         cellLib.setPTMCells(new BigDecimal(reliability));
         pCircuit.setPTMReliabilityMatrix();
@@ -937,51 +937,51 @@ public class Commands {
         }            
     }
     
-    //CALCULA AS MULTIPLICAÇÕES E SOMAS NECESSÁRIAS PARA SE OBTER AS MATRIZES PTM
     public void Foo5() {                                               
         
-        final long startTime = System.currentTimeMillis();
         
-        String[] circuits = new String[]{
-            
-            "c8_fritz.v",
-            "c9_fritz.v",
-            "c10_fritz.v",
-            "c11_fritz.v",
-            "c20_cadence.v",
-            "c17v1_fritz.v",
-            "c17v2_fritz.v",
-            "c17v3_fritz.v",
-            "c17v4_fritz.v",
-            "c432_cadence.v",
-            "c499_cadence.v",
-            "c880_cadence.v",
-            "c1355_cadence.v",
-            "c1908_cadence.v",
-            "c2670_cadence.v",
-            "c3540_cadence.v",
-            "c5315_cadence.v",
-            "c6288_cadence.v",
-            "c7552_cadence.v",
-            
-        };
         
-        for (int i = 0; i < circuits.length; i++) {
-            try {
-                Terminal.getInstance().executeCommand("read_verilog "+circuits[i]);
-                Terminal.getInstance().executeCommand("init_level");                
-                
-                LevelCircuit lCircuit = Terminal.getInstance().getLevelCircuit();
-                
-                PTMOps.getTotalMultiplicationsWithMatrixRepresentation(lCircuit);
-                System.out.println("####WITHOUT####");
-                PTMOps.getTotalMultiplicationsWithoutMatrixRepresentation(lCircuit);
-                
+        String[] circuits = new String[]{"cla_unit.v",
+                                         "c17v3_fritz.v",
+                                         "c432_schivittz.v",
+                                         "c432_cadence.v"};
+        
+        try {
+                Terminal.getInstance().executeCommand("read_verilog "+circuits[1]);
             } catch (ScriptException ex) {
                 Logger.getLogger(Commands.class.getName()).log(Level.SEVERE, null, ex);
-            }
+            }            
+
+        ProbCircuit pCircuit = new ProbCircuit(Terminal.getInstance().getCircuit());
+        
+        System.out.println("foo5 ==> " + pCircuit.getName());
+        System.out.println("Numero de Gates: " + pCircuit.getGates().size());
+        System.out.println("Numero de Fanouts: " + pCircuit.getFanouts().size());
+        System.out.println("INPUTS: " + pCircuit.getProbInputs().size());
+        System.out.println("OUTPUTS: " + pCircuit.getProbOutputs().size());        
+        
+        Terminal.getInstance().getCellLibrary().setPTMCells(new BigDecimal("0.99999802"));
+        
+        pCircuit.clearProbSignalsMatrix();
+        pCircuit.setPTMReliabilityMatrix();        
+        pCircuit.setProbSignalStates(false);
+        pCircuit.setDefaultProbSourceSignalMatrix();
+        
+        for (int i = 0; i < pCircuit.getProbGates().size(); i++) {
+            
+            BigDecimal[][] matrix = pCircuit.getProbGates().get(i).getReliabilityMatrix();
+            //Printa o nome da porta
+            System.out.println(pCircuit.getProbGates().get(i));
+            //Printa a matriz
+            matrixPrint(matrix);
         }
-               
+        
+        final long startTime = System.currentTimeMillis();
+        //System.out.println(getMTBF(PTMOps2.getCircuitReliabilityByPTM(pCircuit)));
+        System.out.println(getMTBF(SPROps.getSPRReliability(pCircuit)));
+        //System.out.println(getMTBF(SPRMultiPassV3Ops.getSPRMultiPassReliaiblity(pCircuit)));
+        
+        
         
         final long endTime = System.currentTimeMillis();
         String timeConsup = "## TIME CONSUPTION ## ==> " + Long.toString((endTime - startTime)) + " ms";
@@ -989,20 +989,7 @@ public class Commands {
         Terminal.getInstance().terminalOutput(timeConsup);
     }
     
-    public void Foo6() {
-        
-//        CellLibrary cellLib = Terminal.getInstance().getCellLibrary();
-//        
-//        for (int i = 0; i < cellLib.getCells().size(); i++) {
-//            System.out.println(cellLib.getCells().get(i));
-//            System.out.println(Arrays.asList(cellLib.getCells().get(i).getComb()));
-//        }
-        
-        
-        
-        //Timer timer = new Timer();
-        
-        //timer.schedule(new ReportTimer(), 0, 5000);                
+    public void Foo6() {              
         
         final long startTime = System.currentTimeMillis();
         

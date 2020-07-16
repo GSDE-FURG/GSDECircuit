@@ -269,10 +269,11 @@ public class CellLibrary {
             function = function.replaceAll("\\Q+\\E", "||");            
         
             for (int j = 0; j < x; j++) {
-            
+                
+                System.out.println("papai x = " + x);
                 String binary = String.format("%0" + auxCell.getInputs().size() + "d", Integer.valueOf(Integer.toBinaryString(j)));
                 
-
+                
                 try {
                     for (int p = 0; p < auxCell.getInputs().size(); p++) {
                         int bit = Character.getNumericValue(binary.charAt(p));
