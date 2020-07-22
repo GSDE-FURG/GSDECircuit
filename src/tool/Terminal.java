@@ -49,9 +49,6 @@ class TestTerminal {
             // FOR DEV
             Robot r = new Robot();
             term.executeCommand("read_genlib cadence.genlib");
-            
-            
-            /* Guideline test*/
             //term.executeCommand("read_genlib 22-1.genlib");
             //term.executeCommand("read_verilog c17_cadence.v");
             //term.executeCommand("read_verilog c17v3_fritz.v");
