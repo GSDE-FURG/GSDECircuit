@@ -9,6 +9,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.math.MathContext;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.logging.Level;
@@ -292,7 +293,7 @@ public class CellLibrary {
 
                             ptm[j][1] = reliability;
                             ptm[j][0] = 1 - reliability;
-
+                            
                         } else {
                             ptm[j][1] = 1 - reliability;
                             ptm[j][0] = reliability;

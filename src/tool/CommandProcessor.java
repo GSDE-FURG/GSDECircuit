@@ -344,6 +344,9 @@ class CommandProcessor {
             case "foo8":
                 cmd.Foo8();
                 break;
+            case "foo9":
+                cmd.Foo9();
+                break;
             default:
                 Terminal.getInstance().terminalOutput("Command not found!!!");
                 break;

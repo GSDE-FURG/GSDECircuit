@@ -448,7 +448,7 @@ public class Commands {
         cellLib.setPTMCells2(Float.valueOf(reliability));
         cellLib.setPTMCells(new BigDecimal(reliability));
         cellLib.teste();
-        pCircuit.setPTMReliabilityMatrix();
+        pCircuit.setPTMReliabilityMatrix();        
         
         switch(type) {
             
@@ -3429,6 +3429,23 @@ public class Commands {
         }
     }
     
+    
+    public void Foo9() throws ScriptException {                
+        
+        BigDecimal classicReliability = new BigDecimal("0.999999");
+        
+        Terminal.getInstance().executeCommand("read_verilog maxSEMMUX.v");
+        
+        ProbCircuit pCircuit = Terminal.getInstance().getProbCircuit();
+        
+        System.out.println(pCircuit);
+        
+        for (int i = 0; i < pCircuit.getProbSignals().size(); i++) {
+            System.out.println(pCircuit.getProbSignals().get(i).getProbMatrix());
+        }
+        
+        //System.out.println(SPROps.getSPRReliability(pCircuit));
+    }
     
     
     public Object[] callReliabilityMethod(String method, ProbCircuit pCircuit, String reliability) {

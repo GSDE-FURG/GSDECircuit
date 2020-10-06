@@ -1,0 +1,138 @@
+// Benchmark "b03_C.blif" written by ABC on Mon Sep 21 02:54:15 2020
+
+module \b03_C.blif  ( 
+    REQUEST1, REQUEST2, REQUEST3, REQUEST4, CODA0_REG_2__SCAN_IN,
+    CODA0_REG_1__SCAN_IN, CODA0_REG_0__SCAN_IN, CODA1_REG_2__SCAN_IN,
+    CODA1_REG_1__SCAN_IN, CODA1_REG_0__SCAN_IN, CODA2_REG_2__SCAN_IN,
+    CODA2_REG_1__SCAN_IN, CODA2_REG_0__SCAN_IN, CODA3_REG_2__SCAN_IN,
+    CODA3_REG_1__SCAN_IN, CODA3_REG_0__SCAN_IN, GRANT_REG_3__SCAN_IN,
+    GRANT_REG_2__SCAN_IN, GRANT_REG_1__SCAN_IN, GRANT_REG_0__SCAN_IN,
+    GRANT_O_REG_3__SCAN_IN, GRANT_O_REG_2__SCAN_IN, GRANT_O_REG_1__SCAN_IN,
+    GRANT_O_REG_0__SCAN_IN, RU3_REG_SCAN_IN, FU1_REG_SCAN_IN,
+    FU3_REG_SCAN_IN, RU1_REG_SCAN_IN, RU4_REG_SCAN_IN, FU2_REG_SCAN_IN,
+    FU4_REG_SCAN_IN, RU2_REG_SCAN_IN, STATO_REG_1__SCAN_IN,
+    GRANT_O_3_, GRANT_O_2_, GRANT_O_1_, GRANT_O_0_, CODA0_REG_2__SCAN_OUT,
+    CODA0_REG_1__SCAN_OUT, CODA0_REG_0__SCAN_OUT, CODA1_REG_2__SCAN_OUT,
+    CODA1_REG_1__SCAN_OUT, CODA1_REG_0__SCAN_OUT, CODA2_REG_2__SCAN_OUT,
+    CODA2_REG_1__SCAN_OUT, CODA2_REG_0__SCAN_OUT, CODA3_REG_2__SCAN_OUT,
+    CODA3_REG_1__SCAN_OUT, CODA3_REG_0__SCAN_OUT, GRANT_REG_3__SCAN_OUT,
+    GRANT_REG_2__SCAN_OUT, GRANT_REG_1__SCAN_OUT, GRANT_REG_0__SCAN_OUT,
+    GRANT_O_REG_3__SCAN_OUT, GRANT_O_REG_2__SCAN_OUT,
+    GRANT_O_REG_1__SCAN_OUT, GRANT_O_REG_0__SCAN_OUT, RU3_REG_SCAN_OUT,
+    FU1_REG_SCAN_OUT, FU3_REG_SCAN_OUT, RU1_REG_SCAN_OUT, RU4_REG_SCAN_OUT,
+    FU2_REG_SCAN_OUT, FU4_REG_SCAN_OUT, RU2_REG_SCAN_OUT,
+    STATO_REG_1__SCAN_OUT, STATO_REG_0__SCAN_OUT  );
+  input  REQUEST1, REQUEST2, REQUEST3, REQUEST4, CODA0_REG_2__SCAN_IN,
+    CODA0_REG_1__SCAN_IN, CODA0_REG_0__SCAN_IN, CODA1_REG_2__SCAN_IN,
+    CODA1_REG_1__SCAN_IN, CODA1_REG_0__SCAN_IN, CODA2_REG_2__SCAN_IN,
+    CODA2_REG_1__SCAN_IN, CODA2_REG_0__SCAN_IN, CODA3_REG_2__SCAN_IN,
+    CODA3_REG_1__SCAN_IN, CODA3_REG_0__SCAN_IN, GRANT_REG_3__SCAN_IN,
+    GRANT_REG_2__SCAN_IN, GRANT_REG_1__SCAN_IN, GRANT_REG_0__SCAN_IN,
+    GRANT_O_REG_3__SCAN_IN, GRANT_O_REG_2__SCAN_IN, GRANT_O_REG_1__SCAN_IN,
+    GRANT_O_REG_0__SCAN_IN, RU3_REG_SCAN_IN, FU1_REG_SCAN_IN,
+    FU3_REG_SCAN_IN, RU1_REG_SCAN_IN, RU4_REG_SCAN_IN, FU2_REG_SCAN_IN,
+    FU4_REG_SCAN_IN, RU2_REG_SCAN_IN, STATO_REG_1__SCAN_IN;
+  output GRANT_O_3_, GRANT_O_2_, GRANT_O_1_, GRANT_O_0_,
+    CODA0_REG_2__SCAN_OUT, CODA0_REG_1__SCAN_OUT, CODA0_REG_0__SCAN_OUT,
+    CODA1_REG_2__SCAN_OUT, CODA1_REG_1__SCAN_OUT, CODA1_REG_0__SCAN_OUT,
+    CODA2_REG_2__SCAN_OUT, CODA2_REG_1__SCAN_OUT, CODA2_REG_0__SCAN_OUT,
+    CODA3_REG_2__SCAN_OUT, CODA3_REG_1__SCAN_OUT, CODA3_REG_0__SCAN_OUT,
+    GRANT_REG_3__SCAN_OUT, GRANT_REG_2__SCAN_OUT, GRANT_REG_1__SCAN_OUT,
+    GRANT_REG_0__SCAN_OUT, GRANT_O_REG_3__SCAN_OUT,
+    GRANT_O_REG_2__SCAN_OUT, GRANT_O_REG_1__SCAN_OUT,
+    GRANT_O_REG_0__SCAN_OUT, RU3_REG_SCAN_OUT, FU1_REG_SCAN_OUT,
+    FU3_REG_SCAN_OUT, RU1_REG_SCAN_OUT, RU4_REG_SCAN_OUT, FU2_REG_SCAN_OUT,
+    FU4_REG_SCAN_OUT, RU2_REG_SCAN_OUT, STATO_REG_1__SCAN_OUT,
+    STATO_REG_0__SCAN_OUT;
+  wire new_n68_, new_n69_, new_n70_, new_n71_, new_n72_, new_n73_, new_n74_,
+    new_n75_, new_n76_, new_n77_, new_n79_, new_n80_, new_n81_, new_n83_,
+    new_n84_, new_n86_, new_n87_, new_n88_, new_n90_, new_n91_, new_n92_,
+    new_n94_, new_n95_, new_n96_, new_n98_, new_n99_, new_n100_, new_n101_,
+    new_n103_, new_n104_, new_n105_, new_n106_, new_n108_, new_n109_,
+    new_n110_, new_n111_, new_n113_, new_n115_, new_n117_, new_n119_,
+    new_n120_, new_n121_, new_n122_, new_n124_, new_n126_, new_n128_,
+    new_n129_;
+  INVX1    g00(.A(STATO_REG_1__SCAN_IN), .Y(new_n68_));
+  OR4X1    g01(.A(FU4_REG_SCAN_IN), .B(FU2_REG_SCAN_IN), .C(FU3_REG_SCAN_IN), .D(FU1_REG_SCAN_IN), .Y(new_n69_));
+  AND2X1   g02(.A(new_n69_), .B(STATO_REG_1__SCAN_IN), .Y(new_n70_));
+  NAND2X1  g03(.A(new_n70_), .B(new_n68_), .Y(new_n71_));
+  INVX1    g04(.A(RU1_REG_SCAN_IN), .Y(new_n72_));
+  OR2X1    g05(.A(RU2_REG_SCAN_IN), .B(RU3_REG_SCAN_IN), .Y(new_n73_));
+  AND2X1   g06(.A(new_n73_), .B(new_n72_), .Y(new_n74_));
+  NAND2X1  g07(.A(new_n69_), .B(STATO_REG_1__SCAN_IN), .Y(new_n75_));
+  AND2X1   g08(.A(new_n69_), .B(STATO_REG_1__SCAN_IN), .Y(new_n76_));
+  AOI22X1  g09(.A0(new_n76_), .A1(CODA1_REG_2__SCAN_IN), .B0(new_n75_), .B1(CODA0_REG_2__SCAN_IN), .Y(new_n77_));
+  OAI21X1  g10(.A0(new_n74_), .A1(new_n71_), .B0(new_n77_), .Y(CODA0_REG_2__SCAN_OUT));
+  INVX1    g11(.A(RU3_REG_SCAN_IN), .Y(new_n79_));
+  OAI21X1  g12(.A0(RU2_REG_SCAN_IN), .A1(new_n79_), .B0(new_n72_), .Y(new_n80_));
+  AOI22X1  g13(.A0(new_n76_), .A1(CODA1_REG_1__SCAN_IN), .B0(new_n75_), .B1(CODA0_REG_1__SCAN_IN), .Y(new_n81_));
+  OAI21X1  g14(.A0(new_n80_), .A1(new_n71_), .B0(new_n81_), .Y(CODA0_REG_1__SCAN_OUT));
+  OR4X1    g15(.A(new_n75_), .B(STATO_REG_1__SCAN_IN), .C(RU2_REG_SCAN_IN), .D(RU1_REG_SCAN_IN), .Y(new_n83_));
+  AOI22X1  g16(.A0(new_n76_), .A1(CODA1_REG_0__SCAN_IN), .B0(new_n75_), .B1(CODA0_REG_0__SCAN_IN), .Y(new_n84_));
+  NAND2X1  g17(.A(new_n84_), .B(new_n83_), .Y(CODA0_REG_0__SCAN_OUT));
+  NAND3X1  g18(.A(new_n69_), .B(STATO_REG_1__SCAN_IN), .C(CODA2_REG_2__SCAN_IN), .Y(new_n86_));
+  NAND2X1  g19(.A(new_n75_), .B(CODA1_REG_2__SCAN_IN), .Y(new_n87_));
+  NAND3X1  g20(.A(new_n70_), .B(new_n68_), .C(CODA0_REG_2__SCAN_IN), .Y(new_n88_));
+  NAND3X1  g21(.A(new_n88_), .B(new_n87_), .C(new_n86_), .Y(CODA1_REG_2__SCAN_OUT));
+  NAND3X1  g22(.A(new_n69_), .B(STATO_REG_1__SCAN_IN), .C(CODA2_REG_1__SCAN_IN), .Y(new_n90_));
+  NAND2X1  g23(.A(new_n75_), .B(CODA1_REG_1__SCAN_IN), .Y(new_n91_));
+  NAND3X1  g24(.A(new_n70_), .B(new_n68_), .C(CODA0_REG_1__SCAN_IN), .Y(new_n92_));
+  NAND3X1  g25(.A(new_n92_), .B(new_n91_), .C(new_n90_), .Y(CODA1_REG_1__SCAN_OUT));
+  NAND3X1  g26(.A(new_n69_), .B(STATO_REG_1__SCAN_IN), .C(CODA2_REG_0__SCAN_IN), .Y(new_n94_));
+  NAND2X1  g27(.A(new_n75_), .B(CODA1_REG_0__SCAN_IN), .Y(new_n95_));
+  NAND3X1  g28(.A(new_n70_), .B(new_n68_), .C(CODA0_REG_0__SCAN_IN), .Y(new_n96_));
+  NAND3X1  g29(.A(new_n96_), .B(new_n95_), .C(new_n94_), .Y(CODA1_REG_0__SCAN_OUT));
+  NAND3X1  g30(.A(new_n69_), .B(STATO_REG_1__SCAN_IN), .C(CODA3_REG_2__SCAN_IN), .Y(new_n98_));
+  INVX1    g31(.A(CODA2_REG_2__SCAN_IN), .Y(new_n99_));
+  OR2X1    g32(.A(new_n70_), .B(new_n99_), .Y(new_n100_));
+  NAND3X1  g33(.A(new_n70_), .B(new_n68_), .C(CODA1_REG_2__SCAN_IN), .Y(new_n101_));
+  NAND3X1  g34(.A(new_n101_), .B(new_n100_), .C(new_n98_), .Y(CODA2_REG_2__SCAN_OUT));
+  NAND3X1  g35(.A(new_n69_), .B(STATO_REG_1__SCAN_IN), .C(CODA3_REG_1__SCAN_IN), .Y(new_n103_));
+  INVX1    g36(.A(CODA2_REG_1__SCAN_IN), .Y(new_n104_));
+  OR2X1    g37(.A(new_n70_), .B(new_n104_), .Y(new_n105_));
+  NAND3X1  g38(.A(new_n70_), .B(new_n68_), .C(CODA1_REG_1__SCAN_IN), .Y(new_n106_));
+  NAND3X1  g39(.A(new_n106_), .B(new_n105_), .C(new_n103_), .Y(CODA2_REG_1__SCAN_OUT));
+  NAND3X1  g40(.A(new_n69_), .B(STATO_REG_1__SCAN_IN), .C(CODA3_REG_0__SCAN_IN), .Y(new_n108_));
+  INVX1    g41(.A(CODA2_REG_0__SCAN_IN), .Y(new_n109_));
+  OR2X1    g42(.A(new_n70_), .B(new_n109_), .Y(new_n110_));
+  NAND3X1  g43(.A(new_n70_), .B(new_n68_), .C(CODA1_REG_0__SCAN_IN), .Y(new_n111_));
+  NAND3X1  g44(.A(new_n111_), .B(new_n110_), .C(new_n108_), .Y(CODA2_REG_0__SCAN_OUT));
+  INVX1    g45(.A(CODA3_REG_2__SCAN_IN), .Y(new_n113_));
+  OAI22X1  g46(.A0(new_n71_), .A1(new_n99_), .B0(new_n70_), .B1(new_n113_), .Y(CODA3_REG_2__SCAN_OUT));
+  INVX1    g47(.A(CODA3_REG_1__SCAN_IN), .Y(new_n115_));
+  OAI22X1  g48(.A0(new_n71_), .A1(new_n104_), .B0(new_n70_), .B1(new_n115_), .Y(CODA3_REG_1__SCAN_OUT));
+  INVX1    g49(.A(CODA3_REG_0__SCAN_IN), .Y(new_n117_));
+  OAI22X1  g50(.A0(new_n71_), .A1(new_n109_), .B0(new_n70_), .B1(new_n117_), .Y(CODA3_REG_0__SCAN_OUT));
+  INVX1    g51(.A(GRANT_REG_3__SCAN_IN), .Y(new_n119_));
+  INVX1    g52(.A(CODA0_REG_1__SCAN_IN), .Y(new_n120_));
+  INVX1    g53(.A(CODA0_REG_0__SCAN_IN), .Y(new_n121_));
+  NAND4X1  g54(.A(new_n70_), .B(new_n121_), .C(new_n120_), .D(CODA0_REG_2__SCAN_IN), .Y(new_n122_));
+  OAI21X1  g55(.A0(new_n70_), .A1(new_n119_), .B0(new_n122_), .Y(GRANT_REG_3__SCAN_OUT));
+  NOR3X1   g56(.A(CODA0_REG_0__SCAN_IN), .B(new_n120_), .C(CODA0_REG_2__SCAN_IN), .Y(new_n124_));
+  MX2X1    g57(.A(GRANT_REG_2__SCAN_IN), .B(new_n124_), .S0(new_n70_), .Y(GRANT_REG_2__SCAN_OUT));
+  NOR3X1   g58(.A(new_n121_), .B(CODA0_REG_1__SCAN_IN), .C(CODA0_REG_2__SCAN_IN), .Y(new_n126_));
+  MX2X1    g59(.A(GRANT_REG_1__SCAN_IN), .B(new_n126_), .S0(new_n70_), .Y(GRANT_REG_1__SCAN_OUT));
+  INVX1    g60(.A(GRANT_REG_0__SCAN_IN), .Y(new_n128_));
+  NAND4X1  g61(.A(new_n70_), .B(CODA0_REG_0__SCAN_IN), .C(CODA0_REG_1__SCAN_IN), .D(CODA0_REG_2__SCAN_IN), .Y(new_n129_));
+  OAI21X1  g62(.A0(new_n70_), .A1(new_n128_), .B0(new_n129_), .Y(GRANT_REG_0__SCAN_OUT));
+  ZERO     g63(.Y(STATO_REG_1__SCAN_OUT));
+  ONE      g64(.Y(STATO_REG_0__SCAN_OUT));
+  BUFX1    g65(.A(GRANT_O_REG_3__SCAN_IN), .Y(GRANT_O_3_));
+  BUFX1    g66(.A(GRANT_O_REG_2__SCAN_IN), .Y(GRANT_O_2_));
+  BUFX1    g67(.A(GRANT_O_REG_1__SCAN_IN), .Y(GRANT_O_1_));
+  BUFX1    g68(.A(GRANT_O_REG_0__SCAN_IN), .Y(GRANT_O_0_));
+  BUFX1    g69(.A(GRANT_O_REG_3__SCAN_IN), .Y(GRANT_O_REG_3__SCAN_OUT));
+  BUFX1    g70(.A(GRANT_O_REG_2__SCAN_IN), .Y(GRANT_O_REG_2__SCAN_OUT));
+  BUFX1    g71(.A(GRANT_O_REG_1__SCAN_IN), .Y(GRANT_O_REG_1__SCAN_OUT));
+  BUFX1    g72(.A(GRANT_O_REG_0__SCAN_IN), .Y(GRANT_O_REG_0__SCAN_OUT));
+  BUFX1    g73(.A(REQUEST3), .Y(RU3_REG_SCAN_OUT));
+  BUFX1    g74(.A(FU1_REG_SCAN_IN), .Y(FU1_REG_SCAN_OUT));
+  BUFX1    g75(.A(FU3_REG_SCAN_IN), .Y(FU3_REG_SCAN_OUT));
+  BUFX1    g76(.A(REQUEST1), .Y(RU1_REG_SCAN_OUT));
+  BUFX1    g77(.A(REQUEST4), .Y(RU4_REG_SCAN_OUT));
+  BUFX1    g78(.A(FU2_REG_SCAN_IN), .Y(FU2_REG_SCAN_OUT));
+  BUFX1    g79(.A(FU4_REG_SCAN_IN), .Y(FU4_REG_SCAN_OUT));
+  BUFX1    g80(.A(REQUEST2), .Y(RU2_REG_SCAN_OUT));
+endmodule
+
+
