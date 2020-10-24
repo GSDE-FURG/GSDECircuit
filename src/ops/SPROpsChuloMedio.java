@@ -19,7 +19,7 @@ import signalProbability.ProbSignal;
  *
  * @author matheus
  */
-public class SPROps {
+public class SPROpsChuloMedio {
     
     public static BigDecimal[][] getSignalMatrixM(BigDecimal[][] matrix, BigDecimal[][] itm) {
         

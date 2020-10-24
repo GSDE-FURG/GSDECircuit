@@ -115,6 +115,17 @@ public class ProbCircuit extends Circuit {
         return null;
     }
     
+    public ProbSignal getProbSignal(String id) {
+        for(ProbSignal pSignal : this.probSignals) {
+            if(pSignal.getId().equals(id)) {
+                return pSignal;
+            }
+        }
+        
+        return null;
+    }
+        
+    
     
     public void setProbSignalMatrix(ProbSignal pSignal, BigDecimal[][] matrix) {
         for(ProbSignal probSignal : this.probSignals) {

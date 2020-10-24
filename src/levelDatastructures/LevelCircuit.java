@@ -24,7 +24,7 @@ public class LevelCircuit extends Circuit {
     
     public LevelCircuit(Circuit circuit) {                
         
-        super(circuit.getName(), circuit.getSignals(), circuit.getGates());
+        super(circuit.getName(), circuit.getSignals(), circuit.getGates());        
                 
         depthGates = new ArrayList<>();
         gateLevels = new ArrayList<>();
@@ -108,7 +108,7 @@ public class LevelCircuit extends Circuit {
     
     public void setGatesDepth() {
                 
-        for (int i = 0; i < this.getOutputs().size(); i++) {            
+        for (int i = 0; i < this.getOutputs().size(); i++) {
             gateDfs(getDepthGate(this.getOutputs().get(i).getOrigin()));
         }
                 

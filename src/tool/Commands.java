@@ -193,7 +193,8 @@ public class Commands {
         
         
         try {
-            Terminal.getInstance().initCircuit(path);
+            
+            Terminal.getInstance().initCircuit(path);            
             Terminal.getInstance().initLevelCircuit();
             Terminal.getInstance().initProbCircuit();
         } catch (ScriptException ex) {
@@ -3432,17 +3433,142 @@ public class Commands {
     
     public void Foo9() throws ScriptException {                
         
-        BigDecimal classicReliability = new BigDecimal("0.999999");
+        /*
+        Terminal.getInstance().getCellLibrary().setPTMCells2(Float.valueOf(reliabilities[i]));
+                        Terminal.getInstance().getCellLibrary().setPTMCells(new BigDecimal(reliabilities[i]));
+
+                        pCircuit.clearProbSignalsMatrix();                    
+                        pCircuit.setDefaultProbSourceSignalMatrix();
+                        pCircuit.setProbSignalStates(false);
+                        pCircuit.setPTMReliabilityMatrix();
+        */
         
-        Terminal.getInstance().executeCommand("read_verilog maxSEMMUX.v");
+        BigDecimal classicReliability = new BigDecimal("0.99");
+        
+        Terminal.getInstance().executeCommand("read_verilog EPFL-COMB\\ARITHMATIC\\max_cadenceDEBUG.v");
+        //Terminal.getInstance().executeCommand("read_verilog EPFL-COMB\\ARITHMATIC\\barrel_shifter_cadence.v");
+        //Terminal.getInstance().executeCommand("read_verilog EPFL-COMB\\ARITHMATIC\\adder_cadence.v");
+        //Terminal.getInstance().executeCommand("read_verilog ITC99-COMB\\b05_C_cadence.v");
+        
+        
+        Terminal.getInstance().getCellLibrary().setPTMCells(classicReliability);
         
         ProbCircuit pCircuit = Terminal.getInstance().getProbCircuit();
         
-        System.out.println(pCircuit);
+        System.out.println(pCircuit.getName());
         
-        for (int i = 0; i < pCircuit.getProbSignals().size(); i++) {
-            System.out.println(pCircuit.getProbSignals().get(i).getProbMatrix());
+        pCircuit.clearProbSignalsMatrix();                    
+        pCircuit.setDefaultProbSourceSignalMatrix();
+        pCircuit.setProbSignalStates(false);
+        pCircuit.setPTMReliabilityMatrix();
+        
+        /*
+        
+        for (int i = 0; i < pCircuit.getProbGates().size(); i++) {
+            
+            BigDecimal[][] teste = pCircuit.getProbGates().get(i).getReliabilityMatrix();
+            
+            for (int j = 0; j < teste.length; j++) {
+                for (int k = 0; k < teste[j].length; k++) {
+                    if(!teste[j][k].equals(new BigDecimal("0.999999"))) {
+                        if(!teste[j][k].equals(new BigDecimal("0.000001"))) {
+                            System.out.println("PAPAI ===> " + teste[j][k]);
+                        }
+                    }
+                }
+            }
+            
+            //matrixPrint(teste);            
         }
+
+        */
+        
+        System.out.println("ENTRADAS: " + pCircuit.getProbInputs().size());
+        System.out.println("SAIDAS: " + pCircuit.getProbOutputs().size());
+        System.out.println("TOTAL-SINAIS: " + pCircuit.getProbSignals().size());
+        System.out.println("GATES: " + pCircuit.getProbGates().size());
+        System.out.println("GATE-LEVELS: " + pCircuit.getProbGateLevels().size());
+        
+        for (int i = 0; i < pCircuit.getProbOutputs().size(); i++) {
+            System.out.println(pCircuit.getProbOutputs().get(i).getProbMatrix());
+        }
+        
+        BigDecimal result = SPROps.getSPRReliability(pCircuit);
+        System.out.println(result);
+        
+        BigDecimal teste = result;
+        BigDecimal teste2 = new BigDecimal("0.999999").divide(new BigDecimal("0.99"), BigDecimal.ROUND_HALF_EVEN).setScale(50, RoundingMode.CEILING);
+        System.out.println(teste);
+        System.out.println(teste2);
+        System.out.println(teste.multiply(teste2));
+        
+        
+        /*
+        
+        for (int i = 0; i < pCircuit.getProbOutputs().size(); i++) {
+            
+            BigDecimal[][] matrixSignal = pCircuit.getProbOutputs().get(i).getProbMatrix();
+            BigDecimal counter = BigDecimal.ZERO;
+            
+            for (int j = 0; j < matrixSignal.length; j++) {
+                for (int k = 0; k < matrixSignal[j].length; k++) {
+                    counter = counter.add(matrixSignal[j][k]);
+                }
+            }
+            
+            System.out.println(pCircuit.getProbOutputs().get(i).getId() + " ===> " + counter);
+            matrixPrint(matrixSignal);
+        } */
+        
+        /*
+        int gLevel = 1;
+        
+        for (int i = 0; i < pCircuit.getProbGateLevels().get(gLevel).getProbGates().size(); i++) {
+            
+            ProbSignal pSignal = pCircuit.getProbGateLevels().get(gLevel).getProbGates().get(i).getpOutputs().get(0);
+            
+            BigDecimal[][] matrixSignal = pSignal.getProbMatrix();
+            
+            BigDecimal counter = BigDecimal.ZERO;
+            
+            for (int j = 0; j < matrixSignal.length; j++) {
+                for (int k = 0; k < matrixSignal[j].length; k++) {
+                    counter = counter.add(matrixSignal[j][k]);
+                }
+            }            
+            System.out.println(pSignal.getId() + " ===> " + counter);
+            matrixPrint(matrixSignal);
+        } */
+        
+        
+        ProbSignal pSignal = pCircuit.getProbSignal("new_n975_");
+            
+        BigDecimal[][] matrixSignal = pSignal.getProbMatrix();
+
+        BigDecimal counter = BigDecimal.ZERO;
+
+        for (int j = 0; j < matrixSignal.length; j++) {
+            for (int k = 0; k < matrixSignal[j].length; k++) {
+                counter = counter.add(matrixSignal[j][k]);
+            }
+        }            
+        System.out.println(pSignal.getId() + " ===> " + counter);
+        matrixPrint(matrixSignal);
+        
+        pSignal = pCircuit.getProbSignal("\\address[1]");
+            
+        matrixSignal = pSignal.getProbMatrix();
+
+        counter = BigDecimal.ZERO;
+
+        for (int j = 0; j < matrixSignal.length; j++) {
+            for (int k = 0; k < matrixSignal[j].length; k++) {
+                counter = counter.add(matrixSignal[j][k]);
+            }
+        }            
+        System.out.println(pSignal.getId() + " ===> " + counter);
+        matrixPrint(matrixSignal);
+        
         
         //System.out.println(SPROps.getSPRReliability(pCircuit));
     }
