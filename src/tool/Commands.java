@@ -70,6 +70,7 @@ import levelDatastructures.InterLevel;
 import ops.PTMOps2;
 import ops.PTMOps2Float;
 import ops.SPROps;
+import ops.SPROpsChuloMedio;
 import ops.SPROpsFloat;
 import ops.SerialPTMOpsFloat;
 import ops.OperartionCounters;
@@ -3442,8 +3443,8 @@ public class Commands {
                         pCircuit.setProbSignalStates(false);
                         pCircuit.setPTMReliabilityMatrix();
         */
-        
-        BigDecimal classicReliability = new BigDecimal("0.99");
+        String reliability = "0.999999";
+        BigDecimal classicReliability = new BigDecimal(reliability);
         
         Terminal.getInstance().executeCommand("read_verilog EPFL-COMB\\ARITHMATIC\\max_cadenceDEBUG.v");
         //Terminal.getInstance().executeCommand("read_verilog EPFL-COMB\\ARITHMATIC\\barrel_shifter_cadence.v");
@@ -3489,39 +3490,45 @@ public class Commands {
         System.out.println("GATES: " + pCircuit.getProbGates().size());
         System.out.println("GATE-LEVELS: " + pCircuit.getProbGateLevels().size());
         
-        for (int i = 0; i < pCircuit.getProbOutputs().size(); i++) {
-            System.out.println(pCircuit.getProbOutputs().get(i).getProbMatrix());
-        }
+        //for (int i = 0; i < pCircuit.getProbOutputs().size(); i++) {
+            //System.out.println(pCircuit.getProbOutputs().get(i).getProbMatrix());
+        //}
         
-        BigDecimal result = SPROps.getSPRReliability(pCircuit);
-        System.out.println(result);
-        
-        BigDecimal teste = result;
-        BigDecimal teste2 = new BigDecimal("0.999999").divide(new BigDecimal("0.99"), BigDecimal.ROUND_HALF_EVEN).setScale(50, RoundingMode.CEILING);
-        System.out.println(teste);
-        System.out.println(teste2);
-        System.out.println(teste.multiply(teste2));
+        BigDecimal result = SPROpsChuloMedio.getSPRReliability(pCircuit);        
+                
         
         
-        /*
-        
-        for (int i = 0; i < pCircuit.getProbOutputs().size(); i++) {
-            
-            BigDecimal[][] matrixSignal = pCircuit.getProbOutputs().get(i).getProbMatrix();
-            BigDecimal counter = BigDecimal.ZERO;
-            
-            for (int j = 0; j < matrixSignal.length; j++) {
-                for (int k = 0; k < matrixSignal[j].length; k++) {
-                    counter = counter.add(matrixSignal[j][k]);
-                }
-            }
-            
-            System.out.println(pCircuit.getProbOutputs().get(i).getId() + " ===> " + counter);
-            matrixPrint(matrixSignal);
-        } */
-        
-        /*
         int gLevel = 1;
+        
+        System.out.println(new BigDecimal("0.000001").multiply(new BigDecimal("0.5")));
+        System.out.println(new BigDecimal("0.999999").multiply(new BigDecimal("0.5")));
+        
+        System.out.println("Confiabilidade Circuito: " + result);
+        System.out.println("Intrinseca: " + (new BigDecimal(reliability).pow(pCircuit.getGates().size()).setScale(13, RoundingMode.HALF_UP)));
+        
+        BigDecimal x05 = new BigDecimal("0.5");
+        BigDecimal x04999995 = new BigDecimal("0.4999995");
+        
+        BigDecimal p1 = x05.multiply(x04999995).setScale(14, RoundingMode.HALF_UP);
+        BigDecimal p2 = p1.multiply(x05).setScale(14, RoundingMode.HALF_UP);
+        BigDecimal p3 = p2.multiply(x04999995).setScale(14, RoundingMode.HALF_UP);
+        
+        BigDecimal q1 = x04999995.multiply(x05).setScale(14, RoundingMode.HALF_UP);
+        BigDecimal q2 = q1.multiply(x04999995).setScale(14, RoundingMode.HALF_UP);
+        BigDecimal q3 = q2.multiply(x05).setScale(14, RoundingMode.HALF_UP);
+        
+        System.out.println("0.5 x 0.4999995 = " + p1);
+        System.out.println("0.5 x 0.4999995 x 0.5 = " + p2);
+        System.out.println("0.5 x 0.4999995 x 0.5 x 0.4999995 = " + p3);
+        
+        System.out.println("0.4999995 x 0.5 = " + q1);
+        System.out.println("0.4999995 x 0.5 x 0.4999995 = " + q2);
+        System.out.println("0.4999995 x 0.5 x 0.4999995 x 0.5 = " + q3);
+        
+        
+        System.out.println("TOTAL NO NIVEL: " + pCircuit.getProbGateLevels().get(gLevel).getProbGates().size());
+        
+        int flag = 0;
         
         for (int i = 0; i < pCircuit.getProbGateLevels().get(gLevel).getProbGates().size(); i++) {
             
@@ -3535,12 +3542,19 @@ public class Commands {
                 for (int k = 0; k < matrixSignal[j].length; k++) {
                     counter = counter.add(matrixSignal[j][k]);
                 }
-            }            
-            System.out.println(pSignal.getId() + " ===> " + counter);
-            matrixPrint(matrixSignal);
-        } */
+            }                        
+            
+            if (counter.compareTo(BigDecimal.ONE) != 0) {
+                //System.out.println(pSignal.getId() + " ===> " + pSignal.getPOrigin().getType() + " ===> " + pSignal.getOrigin() + " ===> " + counter);              
+                //matrixPrint(matrixSignal);
+                flag = flag + 1;
+            } else {
+                System.out.println(pSignal.getId() + " ===> " + pSignal.getPOrigin().getType() + " ===> " + pSignal.getOrigin() + " ===> " + counter);
+            }
+            
+        }
         
-        
+        /*
         ProbSignal pSignal = pCircuit.getProbSignal("new_n975_");
             
         BigDecimal[][] matrixSignal = pSignal.getProbMatrix();
@@ -3554,19 +3568,21 @@ public class Commands {
         }            
         System.out.println(pSignal.getId() + " ===> " + counter);
         matrixPrint(matrixSignal);
-        
-        pSignal = pCircuit.getProbSignal("\\address[1]");
+        */
+        System.out.println("Problemas de Arredondamento: " + flag);
+        System.out.println("####   -----------   #####");
+        ProbSignal pSignal = pCircuit.getProbSignal("\\address[1]");
             
-        matrixSignal = pSignal.getProbMatrix();
+        BigDecimal[][] matrixSignal = pSignal.getProbMatrix();
 
-        counter = BigDecimal.ZERO;
+        BigDecimal counter = BigDecimal.ZERO;
 
         for (int j = 0; j < matrixSignal.length; j++) {
             for (int k = 0; k < matrixSignal[j].length; k++) {
                 counter = counter.add(matrixSignal[j][k]);
             }
         }            
-        System.out.println(pSignal.getId() + " ===> " + counter);
+        System.out.println(pSignal.getId() + "===> " + counter);
         matrixPrint(matrixSignal);
         
         

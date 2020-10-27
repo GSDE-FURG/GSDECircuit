@@ -137,7 +137,7 @@ public class SPROpsChuloMedio {
             //value.setScale(20, RoundingMode.HALF_DOWN);
             
             value = value.multiply(correct0.add(correct1));
-            value = value.setScale(20, RoundingMode.HALF_DOWN);
+            value = value.setScale(13, RoundingMode.HALF_DOWN);
 
         }
         
