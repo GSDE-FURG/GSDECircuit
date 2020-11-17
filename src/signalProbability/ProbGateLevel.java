@@ -98,6 +98,21 @@ public class ProbGateLevel {
         return pWireGates;
     }
     
+    public ArrayList<ProbSignal> getProbOutputs() {
+        ArrayList<ProbSignal> pOutSignals = new ArrayList<>();
+        
+        for (int i = 0; i < this.getGates().size(); i++) {
+            if(this.getGates().get(i) instanceof ProbSignal) {
+                pOutSignals.add((ProbSignal)this.getGates().get(i));
+            } else {
+                for (ProbSignal s : ((ProbGate)this.getGates().get(i)).getpOutputs()) {
+                    pOutSignals.add(s);
+                }
+            }
+        }        
+        return pOutSignals;
+    }
+    
     public boolean containsGate(Object gate) {
         if(this.gates.contains(gate)) {
             return true;

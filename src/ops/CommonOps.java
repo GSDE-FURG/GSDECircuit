@@ -92,7 +92,7 @@ public class CommonOps {
                         
                         BigDecimal val = a.multiply(matrixB[rowB][colB]);
 
-                        matrixC[i*rowsB+rowB][j*colsB+colB] = val.setScale(13, RoundingMode.HALF_UP);
+                        matrixC[i*rowsB+rowB][j*colsB+colB] = val.setScale(30, RoundingMode.HALF_UP);
                         //matrixC[i*rowsB+rowB][j*colsB+colB] = val;
                     }
                 }
@@ -128,7 +128,7 @@ public class CommonOps {
         for (int i = 0; i < aRows; i++) { // aRow
             for (int j = 0; j < bColumns; j++) { // bColumn
                 for (int k = 0; k < aColumns; k++) { // aColumn
-                    C[i][j] = C[i][j].add(A[i][k].multiply(B[k][j])).setScale(13, RoundingMode.HALF_UP);
+                    C[i][j] = C[i][j].add(A[i][k].multiply(B[k][j]).setScale(30, RoundingMode.HALF_UP)).setScale(30, RoundingMode.HALF_UP);
                     //C[i][j] = C[i][j].add(A[i][k].multiply(B[k][j]));
                 }
             }
@@ -318,6 +318,35 @@ public class CommonOps {
         return itm;
     }
     
+    public static BigDecimal getSignalMatrixDifference(BigDecimal[][] matrix, int scale) {
+        BigDecimal counter = BigDecimal.ZERO;
+            
+        for (int j = 0; j < matrix.length; j++) {
+            for (int k = 0; k < matrix[j].length; k++) {
+                counter = counter.add(matrix[j][k]);
+            }
+        }   
+        return BigDecimal.ONE.subtract(counter).setScale(scale, RoundingMode.CEILING);
+    }
+    
+    public static BigDecimal[][] getSignalMatrixDistributedError(BigDecimal[][] matrix, BigDecimal error, int scale) {
+        
+        for (int j = 0; j < matrix.length; j++) {
+            for (int k = 0; k < matrix[j].length; k++) {
+                BigDecimal matrixValue = matrix[j][k];
+                BigDecimal percentageValue = matrixValue.multiply(error.abs()).setScale(scale, RoundingMode.HALF_UP);
+                
+                //System.out.println("MatrixValue " + matrixValue);
+                //System.out.println("PercentageValue: " + percentageValue);
+                //System.out.println("Error: " + error);
+                                
+                matrix[j][k] = matrix[j][k].divide(BigDecimal.ONE.subtract(error).setScale(scale, RoundingMode.HALF_UP), scale, RoundingMode.HALF_UP).setScale(scale, RoundingMode.HALF_UP);
+                //System.out.println(matrix[j][k]);
+            }
+        } 
+        //System.out.println("#####################");
+        return matrix;
+    }   
     /**
      * calculates the inherent reliability in BigDecimal of a circuit, that is, R^N, where
      * R = gates' reliability and N = total gates in circuit

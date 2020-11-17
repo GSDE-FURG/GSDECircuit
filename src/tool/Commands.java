@@ -9,6 +9,7 @@ import datastructures.Cell;
 import datastructures.CellLibrary;
 import datastructures.Circuit;
 import datastructures.Gate;
+import datastructures.InputVector;
 import datastructures.Signal;
 import java.io.BufferedReader;
 
@@ -3443,13 +3444,23 @@ public class Commands {
                         pCircuit.setProbSignalStates(false);
                         pCircuit.setPTMReliabilityMatrix();
         */
-        String reliability = "0.999999";
+        String reliability = "0.99999";
+        int scale = 50;
         BigDecimal classicReliability = new BigDecimal(reliability);
         
-        Terminal.getInstance().executeCommand("read_verilog EPFL-COMB\\ARITHMATIC\\max_cadenceDEBUG.v");
+        //Terminal.getInstance().executeCommand("read_verilog EPFL-COMB\\ARITHMATIC\\max_cadenceDEBUG.v");
+        //Terminal.getInstance().executeCommand("read_verilog EPFL-COMB\\ARITHMATIC\\multiplier_cadence.v");
+        //Terminal.getInstance().executeCommand("read_verilog EPFL-COMB\\RANDOM-CONTROL\\priority_encoder_candence.v");
+        //Terminal.getInstance().executeCommand("read_verilog EPFL-COMB\\RANDOM-CONTROL\\voter_candence.v");
         //Terminal.getInstance().executeCommand("read_verilog EPFL-COMB\\ARITHMATIC\\barrel_shifter_cadence.v");
         //Terminal.getInstance().executeCommand("read_verilog EPFL-COMB\\ARITHMATIC\\adder_cadence.v");
-        //Terminal.getInstance().executeCommand("read_verilog ITC99-COMB\\b05_C_cadence.v");
+        //Terminal.getInstance().executeCommand("read_verilog ITC99-COMB\\b03_C_cadence.v");
+        //Terminal.getInstance().executeCommand("read_verilog ITC99-COMB\\b02_C_cadence.v");
+        //Terminal.getInstance().executeCommand("read_verilog ITC99-COMB\\b01_C_cadence.v");
+        //Terminal.getInstance().executeCommand("read_verilog c17_mapped.v");
+        //Terminal.getInstance().executeCommand("read_verilog b01_C_cadenceLEVEL0-LEVEL1.v");
+        Terminal.getInstance().executeCommand("read_verilog b01_C_PODADO.v");
+        //Terminal.getInstance().executeCommand("read_verilog 2bits-multiplex.v");
         
         
         Terminal.getInstance().getCellLibrary().setPTMCells(classicReliability);
@@ -3461,7 +3472,7 @@ public class Commands {
         pCircuit.clearProbSignalsMatrix();                    
         pCircuit.setDefaultProbSourceSignalMatrix();
         pCircuit.setProbSignalStates(false);
-        pCircuit.setPTMReliabilityMatrix();
+        pCircuit.setPTMReliabilityMatrix();                 
         
         /*
         
@@ -3494,17 +3505,21 @@ public class Commands {
             //System.out.println(pCircuit.getProbOutputs().get(i).getProbMatrix());
         //}
         
-        BigDecimal result = SPROpsChuloMedio.getSPRReliability(pCircuit);        
+        //BigDecimal result = SPROpsChuloMedio.getSPRReliabilityDEBUGMODE(pCircuit, scale, reliability);        
+        BigDecimal result = SPROpsChuloMedio.getSPRReliability(pCircuit, scale);        
                 
         
         
-        int gLevel = 1;
-        
-        System.out.println(new BigDecimal("0.000001").multiply(new BigDecimal("0.5")));
-        System.out.println(new BigDecimal("0.999999").multiply(new BigDecimal("0.5")));
+        int gLevel = 0;
         
         System.out.println("Confiabilidade Circuito: " + result);
-        System.out.println("Intrinseca: " + (new BigDecimal(reliability).pow(pCircuit.getGates().size()).setScale(13, RoundingMode.HALF_UP)));
+        System.out.println("Intrinseca: " + (new BigDecimal(reliability).pow(pCircuit.getGates().size()).setScale(scale, RoundingMode.HALF_UP)));
+        
+        System.out.println(result);
+        System.out.println((new BigDecimal(reliability).pow(pCircuit.getGates().size()).setScale(scale, RoundingMode.HALF_UP)));
+        
+        /*
+        # PARA VERIDICAR OS ERROS DE ARREDONDAMENTO
         
         BigDecimal x05 = new BigDecimal("0.5");
         BigDecimal x04999995 = new BigDecimal("0.4999995");
@@ -3525,11 +3540,14 @@ public class Commands {
         System.out.println("0.4999995 x 0.5 x 0.4999995 = " + q2);
         System.out.println("0.4999995 x 0.5 x 0.4999995 x 0.5 = " + q3);
         
+        */
         
         System.out.println("TOTAL NO NIVEL: " + pCircuit.getProbGateLevels().get(gLevel).getProbGates().size());
         
+        /*
         int flag = 0;
         
+        //for (int i = 0; i < 0; i++) {
         for (int i = 0; i < pCircuit.getProbGateLevels().get(gLevel).getProbGates().size(); i++) {
             
             ProbSignal pSignal = pCircuit.getProbGateLevels().get(gLevel).getProbGates().get(i).getpOutputs().get(0);
@@ -3545,14 +3563,45 @@ public class Commands {
             }                        
             
             if (counter.compareTo(BigDecimal.ONE) != 0) {
-                //System.out.println(pSignal.getId() + " ===> " + pSignal.getPOrigin().getType() + " ===> " + pSignal.getOrigin() + " ===> " + counter);              
-                //matrixPrint(matrixSignal);
+                System.out.println(pSignal.getId() + " ===> " + pSignal.getPOrigin().getType() + " ===> " + pSignal.getOrigin() + " ===> " + counter);              
+                matrixPrint(matrixSignal);
                 flag = flag + 1;
-            } else {
-                System.out.println(pSignal.getId() + " ===> " + pSignal.getPOrigin().getType() + " ===> " + pSignal.getOrigin() + " ===> " + counter);
-            }
-            
+            }                                    
         }
+        
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < pCircuit.getProbGateLevels().get(i).getProbGates().size(); j++) {
+                System.out.println(pCircuit.getProbGateLevels().get(i).getProbGates().get(j));
+            }
+            System.out.println("####################");
+        }
+        
+        for (ProbSignal probSignal : pCircuit.getProbSignals()) {
+            System.out.println(probSignal);            
+            matrixPrint(probSignal.getProbMatrix());
+            System.out.println("##############");
+        }
+        
+        */
+        
+        InputVector input = new InputVector(new BigInteger("13"));        
+        
+        System.out.println("13");
+        System.out.println(SPROpsChuloMedio.getSPRReliability(pCircuit, input, scale));
+        
+        System.out.println("9");
+        input = new InputVector(new BigInteger("9"));
+        System.out.println(SPROpsChuloMedio.getSPRReliability(pCircuit, input, scale));
+        
+        System.out.println("0");
+        input = new InputVector(new BigInteger("0"));
+        System.out.println(SPROpsChuloMedio.getSPRReliability(pCircuit, input, scale));
+        
+        
+        System.out.println("13");
+        input = new InputVector(new BigInteger("13"));
+        System.out.println(SPROpsChuloMedio.getSPRReliability(pCircuit, input, scale)); 
+        
         
         /*
         ProbSignal pSignal = pCircuit.getProbSignal("new_n975_");
@@ -3569,6 +3618,8 @@ public class Commands {
         System.out.println(pSignal.getId() + " ===> " + counter);
         matrixPrint(matrixSignal);
         */
+        
+        /*
         System.out.println("Problemas de Arredondamento: " + flag);
         System.out.println("####   -----------   #####");
         ProbSignal pSignal = pCircuit.getProbSignal("\\address[1]");
@@ -3584,7 +3635,7 @@ public class Commands {
         }            
         System.out.println(pSignal.getId() + "===> " + counter);
         matrixPrint(matrixSignal);
-        
+        */
         
         //System.out.println(SPROps.getSPRReliability(pCircuit));
     }
