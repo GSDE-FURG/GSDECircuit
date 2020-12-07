@@ -37,6 +37,10 @@ public class CellLibrary {
     public CellLibrary() {
 
     }
+    
+    public CellLibrary(String libraryPath) throws IOException, ScriptException {
+        this.initLibrary(libraryPath);
+    }
 
     public ArrayList<Cell> getCells() {
         return cells;

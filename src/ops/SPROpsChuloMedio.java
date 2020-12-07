@@ -233,14 +233,22 @@ public class SPROpsChuloMedio {
     
     
     
-    public static BigDecimal getSPRReliabilityDEBUGMODE(ProbCircuit pCircuit, int scale, String reliability) {
+    public static BigDecimal getSPRReliabilityDEBUGMODE(ProbCircuit pCircuit, int scale) {
         
         ArrayList<String> debug = new ArrayList();
-        int gateCounter = 0;
+        //int gateCounter = 0;
         
         for (int i = 0; i < pCircuit.getProbGateLevels().size(); i++) {
             ProbGateLevel pGateLevel = pCircuit.getProbGateLevels().get(i);
-            gateCounter = gateCounter + pGateLevel.getProbGates().size();
+            BigDecimal[] abaixo = new BigDecimal[2];
+            BigDecimal[] acima = new BigDecimal[2];
+            
+            acima[0] = null;
+            acima[1] = null;
+            abaixo[0] = null;
+            abaixo[1] = null;
+            
+            //gateCounter = gateCounter + pGateLevel.getProbGates().size();
             
             // contador de sinais corrigidos por arredondamento
             int signalCounter = 0;
@@ -274,13 +282,56 @@ public class SPROpsChuloMedio {
                         
                         BigDecimal difference = CommonOps.getSignalMatrixDifference(matrix, scale);
                         
+                        /*
+                        if(i == 9) {
+                            System.out.println(difference);
+                        }
+                        */
+                        /*
                         if (difference.compareTo(BigDecimal.ZERO) != 0) {                        
-                            BigDecimal[][] original_matrix = matrix;
                             matrix = CommonOps.getSignalMatrixDistributedError(matrix, difference, scale);
                             signalCounter = signalCounter + 1;
-                            if(pGateLevel.getLevel() == 1) {
-                                System.out.println(pGate.getpInputs() + " ===> " + pGate + " ===> " + pGate.getType() + " ===> " + difference);
-                                CommonOps.matrixPrint(original_matrix);
+                        }
+                        */
+                        if (difference.compareTo(BigDecimal.ZERO) < 0) {                        
+                            matrix = CommonOps.getSignalMatrixDistributedError(matrix, difference, scale);
+                            signalCounter = signalCounter + 1;
+                            
+                            if(acima[0] != null) {
+                                if(acima[0].compareTo(difference) > 0) {
+                                    acima[0] = difference;
+                                }
+                            } else {
+                                acima[0] = difference;
+                            }
+                            
+                            if(acima[1] != null) {
+                                if(acima[1].compareTo(difference) < 0) {
+                                    acima[1] = difference;
+                                }
+                            } else {
+                                acima[1] = difference;
+                            }
+                        }
+                        
+                        if (difference.compareTo(BigDecimal.ZERO) > 0) {                        
+                            matrix = CommonOps.getSignalMatrixDistributedError(matrix, difference, scale);
+                            signalCounter = signalCounter + 1;
+                            
+                            if(abaixo[0] != null) {
+                                if(abaixo[0].compareTo(difference) > 0) {
+                                    abaixo[0] = difference;
+                                }
+                            } else {
+                                abaixo[0] = difference;
+                            }
+                            
+                            if(abaixo[1] != null) {
+                                if(abaixo[1].compareTo(difference) < 0) {
+                                    abaixo[1] = difference;
+                                }
+                            } else {
+                                abaixo[1] = difference;
                             }
                         }
                     }
@@ -290,13 +341,15 @@ public class SPROpsChuloMedio {
                 }                                
             }
             
-            BigDecimal partialReliability = getJointOutputReliability(pGateLevel.getProbOutputs(), scale);
-            BigDecimal intrinsica = new BigDecimal(reliability).pow(gateCounter);
-            BigDecimal differnceIntrinsica = partialReliability.divide(intrinsica, scale, RoundingMode.HALF_UP);
+            //BigDecimal partialReliability = getJointOutputReliability(pGateLevel.getProbOutputs(), scale);
+            //BigDecimal intrinsica = new BigDecimal(reliability).pow(gateCounter);
+            //BigDecimal differnceIntrinsica = partialReliability.divide(intrinsica, scale, RoundingMode.HALF_UP);
             debug.add("" + signalCounter + "/" + pGateLevel.getProbGates().size() + 
-                      " ==> (SPR)" + partialReliability +
-                      " ==> (INTR)" + intrinsica +
-                      " ==> (SPR/INTR)" + differnceIntrinsica);
+                      " ==> (acima) [" + acima[0] + "," + acima[1] + "]" +
+                      " ==> (abaixo) [" + abaixo[0] + "," + abaixo[1] + "]"
+                      //" ==> (INTR)" + intrinsica +
+                     // " ==> (SPR/INTR)" + differnceIntrinsica
+            );
         }                
         
         for (int i = 0; i < debug.size(); i++) {

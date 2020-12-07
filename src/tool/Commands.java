@@ -3444,22 +3444,29 @@ public class Commands {
                         pCircuit.setProbSignalStates(false);
                         pCircuit.setPTMReliabilityMatrix();
         */
-        String reliability = "0.99999";
-        int scale = 50;
+        String reliability = "0.9999999999";
+        int scale = 25;
         BigDecimal classicReliability = new BigDecimal(reliability);
         
+        //Terminal.getInstance().executeCommand("read_verilog ISCAS\\ISCAS85\\MappedVerilog\\c432_cadence.v");
+        //Terminal.getInstance().executeCommand("read_verilog ISCAS\\ISCAS85\\MappedVerilog\\c880_cadence.v");
         //Terminal.getInstance().executeCommand("read_verilog EPFL-COMB\\ARITHMATIC\\max_cadenceDEBUG.v");
         //Terminal.getInstance().executeCommand("read_verilog EPFL-COMB\\ARITHMATIC\\multiplier_cadence.v");
         //Terminal.getInstance().executeCommand("read_verilog EPFL-COMB\\RANDOM-CONTROL\\priority_encoder_candence.v");
         //Terminal.getInstance().executeCommand("read_verilog EPFL-COMB\\RANDOM-CONTROL\\voter_candence.v");
-        //Terminal.getInstance().executeCommand("read_verilog EPFL-COMB\\ARITHMATIC\\barrel_shifter_cadence.v");
+        //Terminal.getInstance().executeCommand("read_verilog EPFL-COMB\\RANDOM-CONTROL\\alu_controller_cadence.v");
+        
+        //Terminal.getInstance().executeCommand("read_verilog EPFL-COMB\\ARITHMATIC\\barrel_shifter_cadence.v");        
         //Terminal.getInstance().executeCommand("read_verilog EPFL-COMB\\ARITHMATIC\\adder_cadence.v");
+        //Terminal.getInstance().executeCommand("read_verilog EPFL-COMB\\ARITHMATIC\\sine_cadence.v");
+        
+        Terminal.getInstance().executeCommand("read_verilog ITC99-COMB\\b10_C_cadence.v");
         //Terminal.getInstance().executeCommand("read_verilog ITC99-COMB\\b03_C_cadence.v");
         //Terminal.getInstance().executeCommand("read_verilog ITC99-COMB\\b02_C_cadence.v");
         //Terminal.getInstance().executeCommand("read_verilog ITC99-COMB\\b01_C_cadence.v");
         //Terminal.getInstance().executeCommand("read_verilog c17_mapped.v");
         //Terminal.getInstance().executeCommand("read_verilog b01_C_cadenceLEVEL0-LEVEL1.v");
-        Terminal.getInstance().executeCommand("read_verilog b01_C_PODADO.v");
+        //Terminal.getInstance().executeCommand("read_verilog b01_C_PODADO.v");
         //Terminal.getInstance().executeCommand("read_verilog 2bits-multiplex.v");
         
         
@@ -3506,17 +3513,21 @@ public class Commands {
         //}
         
         //BigDecimal result = SPROpsChuloMedio.getSPRReliabilityDEBUGMODE(pCircuit, scale, reliability);        
-        BigDecimal result = SPROpsChuloMedio.getSPRReliability(pCircuit, scale);        
-                
-        
+        BigDecimal result = SPROpsChuloMedio.getSPRReliabilityDEBUGMODE(pCircuit, scale);
+        System.out.println(result);
+
+        //System.out.println("===>" + SPROpsChuloMedio.getSPRReliability(pCircuit, new InputVector("8"), 20));                        
         
         int gLevel = 0;
+        System.out.println("TOTAL NO NIVEL NO LEVEL " + gLevel + ": " + pCircuit.getProbGateLevels().get(gLevel).getProbGates().size());
         
+        /*
         System.out.println("Confiabilidade Circuito: " + result);
         System.out.println("Intrinseca: " + (new BigDecimal(reliability).pow(pCircuit.getGates().size()).setScale(scale, RoundingMode.HALF_UP)));
         
         System.out.println(result);
         System.out.println((new BigDecimal(reliability).pow(pCircuit.getGates().size()).setScale(scale, RoundingMode.HALF_UP)));
+        */
         
         /*
         # PARA VERIDICAR OS ERROS DE ARREDONDAMENTO
@@ -3540,9 +3551,7 @@ public class Commands {
         System.out.println("0.4999995 x 0.5 x 0.4999995 = " + q2);
         System.out.println("0.4999995 x 0.5 x 0.4999995 x 0.5 = " + q3);
         
-        */
-        
-        System.out.println("TOTAL NO NIVEL: " + pCircuit.getProbGateLevels().get(gLevel).getProbGates().size());
+        */                
         
         /*
         int flag = 0;
@@ -3584,6 +3593,8 @@ public class Commands {
         
         */
         
+        /*
+        
         InputVector input = new InputVector(new BigInteger("13"));        
         
         System.out.println("13");
@@ -3602,6 +3613,7 @@ public class Commands {
         input = new InputVector(new BigInteger("13"));
         System.out.println(SPROpsChuloMedio.getSPRReliability(pCircuit, input, scale)); 
         
+        */
         
         /*
         ProbSignal pSignal = pCircuit.getProbSignal("new_n975_");
