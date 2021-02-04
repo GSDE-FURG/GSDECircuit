@@ -3444,7 +3444,7 @@ public class Commands {
                         pCircuit.setProbSignalStates(false);
                         pCircuit.setPTMReliabilityMatrix();
         */
-        String reliability = "0.9999999999";
+        String reliability = "0.999";
         int scale = 25;
         BigDecimal classicReliability = new BigDecimal(reliability);
         
