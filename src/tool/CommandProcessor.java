@@ -19,7 +19,7 @@ class CommandProcessor {
     private CommandProcessor() {
     }
 
-    public void processCmd(String command) throws ScriptException {
+    public void processCmd(String command) throws ScriptException, IOException {
         
         //String[] splittedCommand = command.split(" ");        
         ArrayList<String> splittedCommand = new ArrayList(Arrays.asList(command.split(" ")));
@@ -238,6 +238,29 @@ class CommandProcessor {
                     Terminal.getInstance().terminalOutput(cmd.getHelpDesc(mainCommand));
                 } else {
                     Terminal.getInstance().terminalOutput("Please use the arg \"--help\" or just \"quit\"!!!");
+                }
+                break;
+                
+            case "read_custom_matrix":                
+                if(argument.isEmpty()) {
+                    Terminal.getInstance().terminalOutput("usage: read_custom_matrix <filename> or \"--help\"");
+                } else if(help) {
+                    Terminal.getInstance().terminalOutput(cmd.getHelpDesc(mainCommand));
+                    Terminal.getInstance().terminalOutput("usage: read_custom_matrix <filename> or \"--help\"");
+                } else {
+                    boolean success = false;
+                    try {
+                        cmd.ReadCustomMatrix(splittedCommand.get(1));
+                        success = true;
+                    } catch (IOException | ScriptException e) {                        
+                        Terminal.getInstance().terminalOutput("## ERRO ##");
+                        Terminal.getInstance().terminalOutput(e.getMessage());
+                        Terminal.getInstance().terminalOutput("## ERRO ##");
+                    } finally {
+                        if(success) {
+                            Terminal.getInstance().terminalOutput("File \"" + splittedCommand.get(1) + "\" successfully processed!!");
+                        }
+                    }
                 }
                 break;
                 

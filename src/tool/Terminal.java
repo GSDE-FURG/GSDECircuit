@@ -3,6 +3,7 @@ package tool;
 
 import datastructures.CellLibrary;
 import datastructures.Circuit;
+import datastructures.CustomMatrixLibrary;
 import java.awt.AWTException;
 import java.awt.Font;
 import java.awt.Robot;
@@ -29,7 +30,7 @@ import signalProbability.ProbCircuit;
 //TODO: Keep a global StringBuilder to decrease memory footprint
 
 class TestTerminal {
-    public static void main(String[] args) throws ScriptException, AWTException {   
+    public static void main(String[] args) throws ScriptException, AWTException, IOException {   
         if(args.length > 0) {
             
             CommandLine cmdLine = new CommandLine(args);
@@ -77,6 +78,7 @@ public class Terminal {
     private final Font font = new Font("SansSerif", Font.BOLD, 15);
     
     private CellLibrary cellLibrary;
+    private CustomMatrixLibrary CustomMatrixLib;
     private Circuit circuit;
     private LevelCircuit levelCircuit;
     private ProbCircuit probCircuit;
@@ -156,6 +158,15 @@ public class Terminal {
     public LevelCircuit getLevelCircuit() {
         return levelCircuit;
     }
+
+    public CustomMatrixLibrary getCustomMatrixLib() {
+        return CustomMatrixLib;
+    }
+
+    public void setCustomMatrixLib(CustomMatrixLibrary CustomMatrixLib) {
+        this.CustomMatrixLib = CustomMatrixLib;
+    }
+    
     
     
     public void initLevelCircuit() {
@@ -240,6 +251,8 @@ public class Terminal {
                     executeCommand(command);
                 } catch (ScriptException ex) {
                     Logger.getLogger(Terminal.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (IOException ex) {
+                    Logger.getLogger(Terminal.class.getName()).log(Level.SEVERE, null, ex);
                 }
                 showNewLine();
                 showPrompt();
@@ -285,7 +298,7 @@ public class Terminal {
         txtArea.setEnabled(false);
     }
 
-    public void executeCommand(String command) throws ScriptException {
+    public void executeCommand(String command) throws ScriptException, IOException {
         processor.processCmd(command);
     }
 

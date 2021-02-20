@@ -8,6 +8,8 @@ package tool;
 import datastructures.Cell;
 import datastructures.CellLibrary;
 import datastructures.Circuit;
+import datastructures.CustomMatrix;
+import datastructures.CustomMatrixLibrary;
 import datastructures.Gate;
 import datastructures.InputVector;
 import datastructures.Signal;
@@ -100,6 +102,8 @@ import static ops.CommonOps.getFIT;
 import static ops.CommonOps.inherentReliabilityFloat;
 import ops.FanoutOps;
 import ops.SPRMultiPassV3Ops;
+import readers.CustomMatrixReader;
+import readers.MappedVerilogReader;
 import tool.Portas;
 
 /**
@@ -180,6 +184,13 @@ public class Commands {
             terminal.terminalOutput(entry.getKey() + "   ####   " + entry.getValue());
         }
                 
+    }
+    
+    public void ReadCustomMatrix(String filename) throws IOException, ScriptException {
+        String path = CommonOps.getWorkPath(this) + "abc" + File.separator + filename;        
+        CustomMatrixLibrary cMatrixLib = new CustomMatrixReader(path).getcMatrixLib();        
+        Terminal.getInstance().setCustomMatrixLib(cMatrixLib);
+        
     }
     
     public void ReadGenlib(String filename) throws IOException, ScriptException {
@@ -521,7 +532,7 @@ public class Commands {
         Terminal.getInstance().terminalOutput(timeConsup);               
     }
     
-    public void Report() {
+    public void Report() throws IOException {
         
         ArrayList<String> circuitNames = new ArrayList<>();
         ArrayList<String> totalGates = new ArrayList<>();
@@ -760,93 +771,37 @@ public class Commands {
         }
     }
     
-    public void Foo() {
+    public void Foo() throws IOException, ScriptException {
         
-        final long startTime = System.currentTimeMillis();
+        Terminal.getInstance().executeCommand("read_genlib full_no_cost.genlib");
+        Terminal.getInstance().executeCommand("read_custom_matrix 45nm.txt");
+        Terminal.getInstance().executeCommand("read_verilog c432_full_no_cost.v");
         
-        BigDecimal reliability = new BigDecimal("0.99");
-        BigDecimal ptm = BigDecimal.ZERO;
+        ProbCircuit pCircuit = Terminal.getInstance().getProbCircuit();
+        CustomMatrixLibrary cMatrixLib = Terminal.getInstance().getCustomMatrixLib();        
+        System.out.println(pCircuit);
         
-        LevelCircuit lCircuit = Terminal.getInstance().getLevelCircuit();
-        CellLibrary cellLib = Terminal.getInstance().getCellLibrary();
-        int circuitIns = PTMOps.PowInt(2, lCircuit.getInputs().size());
-        int circuitOuts = PTMOps.PowInt(2, lCircuit.getOutputs().size());
-        int[] itm = new int[circuitIns];
-        
-        lCircuit.setTecReliability(reliability);
-        
-        BigDecimal auxReliability = lCircuit.getTecReliability();                
-        
-        cellLib.setPTMCells(BigDecimal.ONE);
-        
-        long timeITM = 0;
-        long timePTM = 0;
-        
-        //ArrayList<Integer> teste = PTMOps.getITM(lCircuit);
-        
-        //System.out.println(teste);
-        
-        
-        for (int i = 0; i < circuitIns; i++) {
-                        
-            
-            for (int j = 0; j < circuitOuts; j++) {
-                BigDecimal big = SerialPTMOps.getPTMCircuitIndex(Terminal.getInstance().getLevelCircuit(), Integer.toString(i), Integer.toString(j), reliability);
-                if(big.compareTo(new BigDecimal("1")) == 0) {
-                    itm[i] = j;
-                    break;
-                }
+        Terminal.getInstance().getCellLibrary().setPTMCells(new BigDecimal("0.99999802"));
+
+        pCircuit.setPTMReliabilityMatrix();
+
+
                 
-                System.out.println(i + "x" + j + "=");
-            }
-            
-            System.out.println("Linha " + i);
-            final long endTime = System.currentTimeMillis();
-            String timeConsup = "## TIME CONSUPTION ## ==> " + Long.toString((endTime - startTime)) + " ms";            
-            System.out.println(timeConsup);
-        }
-        
-        timeITM = startTime - System.currentTimeMillis();
-        
-        System.out.println("Cheguei aqui...");
-        
-        cellLib.setPTMCells(auxReliability);
-        
-        
-        
-        for (int i = 0; i < itm.length; i++) {
-            BigDecimal big = SerialPTMOps.getPTMCircuitIndex(Terminal.getInstance().getLevelCircuit(), Integer.toString(i), Integer.toString(itm[i]), reliability);
-            System.out.println("("+i+"x"+itm[i]+") = " + big);
-            ptm = ptm.add(big);
-            
-            final long endTime = System.currentTimeMillis();
-            String timeConsup = "## TIME CONSUPTION ## ==> " + Long.toString((endTime - startTime)) + " ms";            
-            System.out.println(timeConsup);
-        }
-        
-        
-        
-        
-        /* for (int i = 0; i < teste.size(); i++) {
-            BigDecimal big = SerialPTMOps.getPTMCircuitIndex(Terminal.getInstance().getLevelCircuit(), Integer.toString(i), Integer.toString(itm[i]), reliability);
-            System.out.println("("+i+"x"+itm[i]+") = " + big);
-            
-            final long endTime = System.currentTimeMillis();
-            String timeConsup = "## TIME CONSUPTION ## ==> " + Long.toString((endTime - startTime)) + " ms";            
-            System.out.println(timeConsup);
-            ptm = ptm.add(big);
+        /*
+        for (CustomMatrix cMatrix : cMatrixLib.getcMatrixes()) {
+            System.out.println(cMatrix);
+            matrixPrint(cMatrix.getcMatrix());
+            System.out.println("# # # #");
         } */
         
+        matrixPrint(pCircuit.getProbGateByName("g059").getReliabilityMatrix());
+        System.out.println("# # # #");
+        pCircuit.setCustomMatrix(cMatrixLib);
         
-        ptm = ptm.divide(new BigDecimal(circuitIns));
+        matrixPrint(pCircuit.getProbGateByName("g059").getReliabilityMatrix());
+        System.out.println("# # # #");
+        System.out.println(cMatrixLib.getName());
         
-        final long endTime = System.currentTimeMillis();
-        String timeConsup = "## TIME CONSUPTION ## ==> " + Long.toString((endTime - startTime)) + " ms";
-        
-        System.out.println("Tempo ITM = " + timeITM);
-        
-        Terminal.getInstance().terminalOutput(timeConsup);
-        Terminal.getInstance().terminalOutput("Circuit PTM is "+ptm);
     }
     
     public void Foo2() {
@@ -886,7 +841,7 @@ public class Commands {
         Terminal.getInstance().terminalOutput("Circuit PTM is "+ptm);
     }
     
-    public void Foo3(String argument) {
+    public void Foo3(String argument) throws IOException {
         
         final long startTime = System.currentTimeMillis();
         
@@ -919,7 +874,7 @@ public class Commands {
         Terminal.getInstance().terminalOutput(timeConsup);
     }
     
-    public void Foo4() {
+    public void Foo4() throws IOException {
         
         double[] reliabilities = new double[]{
             0.7,
@@ -945,7 +900,7 @@ public class Commands {
         }            
     }
     
-    public void Foo5() {                                               
+    public void Foo5() throws IOException {                                               
         
         
         
@@ -997,7 +952,7 @@ public class Commands {
         Terminal.getInstance().terminalOutput(timeConsup);
     }
     
-    public void Foo6() {              
+    public void Foo6() throws IOException {              
         
         final long startTime = System.currentTimeMillis();
         
@@ -3120,7 +3075,7 @@ public class Commands {
         }
     }
     
-    public void Foo7() {
+    public void Foo7() throws IOException {
                 
         /*
         
@@ -3332,7 +3287,7 @@ public class Commands {
         wFile.CloseFile();
     }
     
-    public void Foo8() {                
+    public void Foo8() throws IOException {                
         Map<String, BigDecimal[][]> schivittzCells = new HashMap<>();
         
         String[] circuits = new String[]{            
@@ -3433,7 +3388,7 @@ public class Commands {
     }
     
     
-    public void Foo9() throws ScriptException {                
+    public void Foo9() throws ScriptException, IOException {                
         
         /*
         Terminal.getInstance().getCellLibrary().setPTMCells2(Float.valueOf(reliabilities[i]));

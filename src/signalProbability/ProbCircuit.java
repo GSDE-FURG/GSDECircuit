@@ -5,8 +5,12 @@
  */
 package signalProbability;
 
+import com.sun.javafx.scene.control.skin.CustomColorDialog;
+import datastructures.Cell;
 import datastructures.CellLibrary;
 import datastructures.Circuit;
+import datastructures.CustomMatrix;
+import datastructures.CustomMatrixLibrary;
 import java.util.ArrayList;
 import datastructures.Signal;
 import datastructures.Gate;
@@ -776,4 +780,31 @@ public class ProbCircuit extends Circuit {
         return gate;
     }
     
+    public void setCustomMatrix(CustomMatrixLibrary cLibrary) {
+                
+        for (ProbGate probGate : this.probGates) {
+            Cell gateType = probGate.getType();
+            CustomMatrix cMatrix = cLibrary.getCMatrix(gateType.getName());
+            
+            if(cMatrix != null) {
+                probGate.setReliabilityMatrix(cMatrix.getcMatrix());
+            } else {
+                System.out.println("Gate: " + probGate.getType().getName());
+            }
+            
+            
+        }
+    }
+    
+    public void setCustomMatrix(Cell cellType) {
+        
+    }
+    
+    public void setCustomMatrix(ProbGate pGate) {
+        
+    }
+    
+    public String toString() {
+        return this.getName();
+    }
 }
