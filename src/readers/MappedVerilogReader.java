@@ -250,6 +250,7 @@ public class MappedVerilogReader {
             }
         }
         
+        System.out.println(this.circ.getName() + "<----");
         System.err.println("Signal " + id + " doesnt exist!!");
         return null;
     }

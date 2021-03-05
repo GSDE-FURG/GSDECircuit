@@ -16,10 +16,10 @@ import javax.script.ScriptException;
  * @author matheus
  */
 class CommandProcessor {
-    private CommandProcessor() {
+    public CommandProcessor() {
     }
 
-    public void processCmd(String command) throws ScriptException, IOException {
+    public void processCmd(String command) throws ScriptException, IOException, Exception {
         
         //String[] splittedCommand = command.split(" ");        
         ArrayList<String> splittedCommand = new ArrayList(Arrays.asList(command.split(" ")));
@@ -181,6 +181,16 @@ class CommandProcessor {
                 cmd.PtmMatrixSize(filename);
                 break;
                 
+            case "ptm":
+                if(!argument.isEmpty()) {
+                    Terminal.getInstance().terminalOutput("Please use the arg \"--help\"");                    
+                } else if(help) {
+                    Terminal.getInstance().terminalOutput(cmd.getHelpDesc(mainCommand));
+                } else {
+                    cmd.getReliabilityPTM("0.99999802", "default");                    
+                }
+                break;    
+                
             case "ptm_big_decimal":
                 if(argument.isEmpty()) {
                     Terminal.getInstance().terminalOutput("Please use the arg \"--help\"");                    
@@ -210,6 +220,30 @@ class CommandProcessor {
                     cmd.getReliabilityPTM(argument, "float");                    
                 }
                 break;
+            
+            case "spr":
+                if(argument.equals("--custom_lib")) {
+                    cmd.getReliabilitySPR("0.99999802", "custom_lib");
+                } else if(!argument.isEmpty()) {
+                    Terminal.getInstance().terminalOutput("Please use the arg \"--help\"");                    
+                } else if(help) {
+                    Terminal.getInstance().terminalOutput(cmd.getHelpDesc(mainCommand));
+                } else {
+                    cmd.getReliabilitySPR("0.99999802", "big_decimal");                    
+                }
+                break;                
+            
+            case "spr-mp":
+                if(argument.equals("--custom_lib")) {
+                    cmd.getReliabilitySPRMP("0.99999802", "custom_lib");
+                } else if(!argument.isEmpty()) {
+                    Terminal.getInstance().terminalOutput("Please use the arg \"--help\"");                    
+                } else if(help) {
+                    Terminal.getInstance().terminalOutput(cmd.getHelpDesc(mainCommand));
+                } else {
+                    cmd.getReliabilitySPRMP("0.99999802", "big_decimal");                    
+                }
+                break;                
             
             case "spr_big_decimal":
                 if(argument.isEmpty()) {

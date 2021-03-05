@@ -30,7 +30,7 @@ import signalProbability.ProbCircuit;
 //TODO: Keep a global StringBuilder to decrease memory footprint
 
 class TestTerminal {
-    public static void main(String[] args) throws ScriptException, AWTException, IOException {   
+    public static void main(String[] args) throws ScriptException, AWTException, IOException, Exception {   
         if(args.length > 0) {
             
             CommandLine cmdLine = new CommandLine(args);
@@ -48,7 +48,7 @@ class TestTerminal {
             
             // FOR DEV
             Robot r = new Robot();
-            term.executeCommand("read_genlib cadence.genlib");
+            //term.executeCommand("read_genlib cadence.genlib");
             /*Commite antes da reunião */
             //term.executeCommand("read_genlib cadence_schiv.genlib");
             //term.executeCommand("read_genlib 22-1.genlib");
@@ -57,7 +57,7 @@ class TestTerminal {
             //term.executeCommand("read_verilog c432_cadence.v");
             //term.executeCommand("read_verilog c20_cadence.v");
             //term.executeCommand("read_verilog c6288_cadence.v");
-            term.executeCommand("read_verilog twoInvOneAnd.v");
+            //term.executeCommand("read_verilog twoInvOneAnd.v");
             //term.executeCommand("init_level");
 
             term.executeCommand("clear");
@@ -253,6 +253,8 @@ public class Terminal {
                     Logger.getLogger(Terminal.class.getName()).log(Level.SEVERE, null, ex);
                 } catch (IOException ex) {
                     Logger.getLogger(Terminal.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (Exception ex) {
+                    Logger.getLogger(Terminal.class.getName()).log(Level.SEVERE, null, ex);
                 }
                 showNewLine();
                 showPrompt();
@@ -298,7 +300,7 @@ public class Terminal {
         txtArea.setEnabled(false);
     }
 
-    public void executeCommand(String command) throws ScriptException, IOException {
+    public void executeCommand(String command) throws ScriptException, IOException, Exception {
         processor.processCmd(command);
     }
 

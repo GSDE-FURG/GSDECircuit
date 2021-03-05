@@ -16,11 +16,13 @@ import datastructures.Signal;
 import datastructures.Gate;
 import java.math.BigDecimal;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import levelDatastructures.DepthGate;
 import levelDatastructures.GateLevel;
+import ops.CommonOps;
 
 /**
  *
@@ -32,7 +34,9 @@ public class ProbCircuit extends Circuit {
     private ArrayList<ProbGate> probGates = new ArrayList<>();
     private ArrayList<ProbGateLevel> probGateLevels = new ArrayList<>();
     private ArrayList<ProbInterLevel> probInterLevels = new ArrayList<>();
-
+    private Map<String, ArrayList<ProbGate>> probGatesOrganized;
+    
+    private boolean probGatesOrgFlag = false;
     
 //    public static ProbCircuit create(String name, ArrayList<Signal> signals, ArrayList<Gate> gates) {
 //        
@@ -781,19 +785,19 @@ public class ProbCircuit extends Circuit {
     }
     
     public void setCustomMatrix(CustomMatrixLibrary cLibrary) {
-                
-        for (ProbGate probGate : this.probGates) {
-            Cell gateType = probGate.getType();
-            CustomMatrix cMatrix = cLibrary.getCMatrix(gateType.getName());
+        
+        this.initOrgProbGatesList();
+        this.probGatesOrganized.forEach((k,pGates)-> {
+            CustomMatrix cMatrix = cLibrary.getCMatrix(k);
             
             if(cMatrix != null) {
-                probGate.setReliabilityMatrix(cMatrix.getcMatrix());
+                for (ProbGate pGate : pGates) {
+                    pGate.setReliabilityMatrix(cMatrix.getcMatrix());
+                }
             } else {
-                System.out.println("Gate: " + probGate.getType().getName());
+                System.out.println("Cell " + k + " not found at CustomMatrix Library!!!");
             }
-            
-            
-        }
+        });
     }
     
     public void setCustomMatrix(Cell cellType) {
@@ -804,7 +808,52 @@ public class ProbCircuit extends Circuit {
         
     }
     
+    
     public String toString() {
         return this.getName();
     }
+    
+    public void initOrgProbGatesList() {
+        
+        Map<String, ArrayList<ProbGate>> pGateListOrg = new HashMap<>();
+        
+        for (ProbGate probGate : this.probGates) {
+            if(pGateListOrg.get(probGate.getType().getName()) == null) {
+                pGateListOrg.put(probGate.getType().getName(), new ArrayList<ProbGate>());
+                pGateListOrg.get(probGate.getType().getName()).add(probGate);
+            } else {
+                pGateListOrg.get(probGate.getType().getName()).add(probGate);
+                //pGateListOrg.put(probGate.getType().getName(), gateTypes.get(gates.get(i).getType().getName()).intValue()+1);
+            }
+        }
+        
+        this.probGatesOrganized = pGateListOrg;
+        this.probGatesOrgFlag = true;
+
+    }
+
+    public Map<String, ArrayList<ProbGate>> getProbGatesOrganized() {
+        return probGatesOrganized;
+    }
+    
+    public int getCellQuantity(String cellName) {
+        
+        int cellQuantity;
+        
+        if(this.probGatesOrgFlag) {
+            ArrayList<ProbGate> list = probGatesOrganized.get(cellName);
+            if(list == null) {
+                cellQuantity = 0;
+            } else {
+                cellQuantity = list.size();
+            }
+        } else {
+            initOrgProbGatesList();
+            cellQuantity = this.getCellQuantity(cellName);
+        }
+                    
+        return cellQuantity;
+    }
+    
+    
 }

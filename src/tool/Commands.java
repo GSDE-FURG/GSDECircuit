@@ -20,6 +20,7 @@ import levelDatastructures.LevelCircuit;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -70,6 +71,8 @@ import javax.script.ScriptException;
 import levelDatastructures.DepthGate;
 import levelDatastructures.GateLevel;
 import levelDatastructures.InterLevel;
+import manipulator.CircuitFactory;
+import manipulator.SPRController;
 import ops.PTMOps2;
 import ops.PTMOps2Float;
 import ops.SPROps;
@@ -135,7 +138,6 @@ public class Commands {
         helpTree.put("clear", "Clear terminal's window");
         helpTree.put("help", "Show this message!!!");
         helpTree.put("get_sonf_reliability", "Print the reliability value based on SONF PTM method");
-        helpTree.put("init_level", "Initialize the Level Circuit");
         helpTree.put("print_gates", "Output circuit types based on readed verilog");
         helpTree.put("print_gates_level", "Output the gates in an specific depth level or all gates levels");
         helpTree.put("print_gatelevels", "Output the GateLevel of circuit with gate and type!!!");
@@ -149,6 +151,7 @@ public class Commands {
         helpTree.put("quit", "Exit tool!!!");
         helpTree.put("read_genlib", "Read a genlib file");
         helpTree.put("read_verilog", "Read circuit based in a verilog");
+        helpTree.put("spr", "Output the reliability by Signal Probability Relaibility using Java's BigDecimal\t\t datatype (fixed gates' reliability in 0.99999802");
         helpTree.put("spr_big_decimal", "Output the reliability by Signal Probability Relaibility using Java's BigDecimal datatype");
         helpTree.put("spr_float", "Output the reliability by Signal Probability Relaibility using float datatype");
         helpTree.put("write_genlib", "Export de current genlib to a file");
@@ -181,7 +184,13 @@ public class Commands {
         Terminal terminal = Terminal.getInstance();
         
         for (Map.Entry<String, String> entry : helpTree.entrySet()) {
-            terminal.terminalOutput(entry.getKey() + "   ####   " + entry.getValue());
+            //terminal.terminalOutput(entry.getKey() + "   ####   " + entry.getValue());
+            if(entry.getKey().length() > 13) {
+                terminal.terminalOutput(entry.getKey() + "\t" + entry.getValue());
+            } else {
+                terminal.terminalOutput(entry.getKey() + "\t\t" + entry.getValue());
+            }
+            
         }
                 
     }
@@ -221,7 +230,7 @@ public class Commands {
             Terminal.getInstance().terminalOutput("Circuit is Null!!!");
         } else {
             
-            Map<String, Integer> gateTypes = new HashMap<String, Integer>();
+            Map<String, Integer> gateTypes = new HashMap<>();
             ArrayList<Gate> gates = circuit.getGates();
 
             for (int i = 0; i < gates.size(); i++) {
@@ -371,14 +380,19 @@ public class Commands {
     }
     
     public void PrintGenlib() throws ScriptException {
+        
         ArrayList<Cell> library = Terminal.getInstance().getCellLibrary().getCells();
+        
+        if(library == null) {
+            Terminal.getInstance().terminalOutput("Genlib is Null!!!");
+        } else {
+            for (int i = 0; i < library.size(); i++) {          
 
-        for (int i = 0; i < library.size(); i++) {          
-
-            Terminal.getInstance().terminalOutput(library.get(i).getName() + " ---- " +
-                                                  library.get(i).getFunctions().toString() + " ---- " +
-                                                  library.get(i).getTruthTable());
-        }
+                Terminal.getInstance().terminalOutput(library.get(i).getName() + " ---- " +
+                                                      library.get(i).getFunctions().toString() + " ---- " +
+                                                      library.get(i).getTruthTable());
+            }
+        }       
     }
     
     public void PrintGateLevels() {
@@ -477,6 +491,11 @@ public class Commands {
             case "float":                                          
                 result = "Reliability PTM (in float) of " + pCircuit.getName() + " CIRCUIT is " + PTMOps2Float.getCircuitReliabilityByPTM(pCircuit);
                 break;
+            
+            case "default":
+                BigDecimal val = PTMOps2.getCircuitReliabilityByPTM(pCircuit);
+                result = "Reliability using PTM of " + pCircuit.getName() + " CIRCUIT is " + val.setScale(13, RoundingMode.CEILING)+ " (MTBF: " + CommonOps.getMTBFBigInt(val) + ")";                
+                break;
                         
         }               
         
@@ -489,24 +508,78 @@ public class Commands {
     
     public void getReliabilitySPR(String reliability, String type) {
         
+        
+        
         final long startTime = System.currentTimeMillis();
         
         String result = "";     
         CellLibrary cellLib = Terminal.getInstance().getCellLibrary();
-        ProbCircuit pCircuit = Terminal.getInstance().getProbCircuit();         
-        cellLib.setPTMCells2(Float.valueOf(reliability));
-        cellLib.setPTMCells(new BigDecimal(reliability));                
-        pCircuit.setPTMReliabilityMatrix();
-        pCircuit.setDefaultProbSourceSignalMatrix();
+        ProbCircuit pCircuit = Terminal.getInstance().getProbCircuit();
+        SPRController controller;
+        BigDecimal val;
         
         switch(type) {
             
-            case "big_decimal":        
-                result = "Reliability SPR (in BigDecimal) of " + pCircuit.getName() + " CIRCUIT is " + SPROps.getSPRReliability(pCircuit);
+            case "big_decimal":                                
+                
+                controller = new SPRController(Terminal.getInstance());                        
+                val = controller.getReliability(new BigDecimal(reliability));
+                
+                result = "Reliability using SPR of " + pCircuit.getName() + " CIRCUIT is " + val + " (MTBF: " + CommonOps.getMTBFBigInt(val) + ")";
                 break;
             
-            case "float":                                          
+            case "float":
+                cellLib.setPTMCells2(Float.valueOf(reliability));
+                pCircuit.setPTMReliabilityMatrix();
+                pCircuit.setDefaultProbSourceSignalMatrix();
                 result = "Reliability SPR (in float) of " + pCircuit.getName() + " CIRCUIT is " + SPROpsFloat.getSPRReliability(pCircuit);
+                break;
+                
+            case "custom_lib":                                
+                
+                controller = new SPRController(Terminal.getInstance());                        
+                val = controller.getReliabilityCustomLib(new BigDecimal(reliability));
+                
+                result = "Reliability using SPR (with CustomLib) of " + pCircuit.getName() + " CIRCUIT is " + val + " (MTBF: " + CommonOps.getMTBFBigInt(val) + ")";
+                break;
+                        
+        }               
+        
+        Terminal.getInstance().terminalOutput(result);
+        System.out.println(result);
+        
+        final long endTime = System.currentTimeMillis();
+        String timeConsup = "## TIME CONSUPTION ## ==> " + Long.toString((endTime - startTime)) + " ms";
+        Terminal.getInstance().terminalOutput(timeConsup);               
+    }
+    
+    
+    public void getReliabilitySPRMP(String reliability, String type) {
+        
+        
+        
+        final long startTime = System.currentTimeMillis();
+        
+        String result = "";     
+        CellLibrary cellLib = Terminal.getInstance().getCellLibrary();
+        ProbCircuit pCircuit = Terminal.getInstance().getProbCircuit();
+        SPRController controller;
+        BigDecimal val;
+        
+        switch(type) {
+            
+            case "big_decimal":                                                                  
+                val = SPRMultiPassV3Ops.getSPRMultiPassReliaiblity(pCircuit);
+                
+                result = "Reliability using SPR-MP of " + pCircuit.getName() + " CIRCUIT is " + val + " (MTBF: " + CommonOps.getMTBFBigInt(val) + ")";
+                break;            
+                
+            case "custom_lib":                                
+                
+                controller = new SPRController(Terminal.getInstance());                        
+                val = controller.getReliabilityCustomLib(new BigDecimal(reliability));
+                
+                result = "Reliability using SPR (with CustomLib) of " + pCircuit.getName() + " CIRCUIT is " + val + " (MTBF: " + CommonOps.getMTBFBigInt(val) + ")";
                 break;
                         
         }               
@@ -532,7 +605,7 @@ public class Commands {
         Terminal.getInstance().terminalOutput(timeConsup);               
     }
     
-    public void Report() throws IOException {
+    public void Report() throws IOException, Exception {
         
         ArrayList<String> circuitNames = new ArrayList<>();
         ArrayList<String> totalGates = new ArrayList<>();
@@ -771,36 +844,199 @@ public class Commands {
         }
     }
     
-    public void Foo() throws IOException, ScriptException {
+    public void Foo() throws IOException, ScriptException, Exception {
         
-        Terminal.getInstance().executeCommand("read_genlib full_no_cost.genlib");
+        
+        
+        Terminal.getInstance().executeCommand("read_genlib ../files/genlibs/lib_full_no_cost.genlib");
         Terminal.getInstance().executeCommand("read_custom_matrix 45nm.txt");
-        Terminal.getInstance().executeCommand("read_verilog c432_full_no_cost.v");
+        //Terminal.getInstance().executeCommand("read_verilog ../files/mappeds/c432_full_no_costV2.v");
         
-        ProbCircuit pCircuit = Terminal.getInstance().getProbCircuit();
-        CustomMatrixLibrary cMatrixLib = Terminal.getInstance().getCustomMatrixLib();        
-        System.out.println(pCircuit);
         
-        Terminal.getInstance().getCellLibrary().setPTMCells(new BigDecimal("0.99999802"));
-
-        pCircuit.setPTMReliabilityMatrix();
-
-
+        //Terminal.getInstance().executeCommand("spr_big_decimal 0.999999");
+        //Terminal.getInstance().executeCommand("spr_big_decimal 0.999999001");
+        //Terminal.getInstance().executeCommand("spr");
+        
+       
+        String[] cellList = {"ZERO",
+                             "ONE",
+                             "BUF",
+                             "INV",
+                             "NOR2",
+                             "NOR3",
+                             "NOR4",
+                             "NAND2",
+                             "NAND3",
+                             "NAND4",
+                             "OAI21",
+                             "OAI211",
+                             "OAI22",
+                             "OAI221",
+                             "OAI222",
+                             "AOI21",
+                             "AOI211",
+                             "AOI22",
+                             "AOI221",
+                             "AOI222",
+                             "XOR2"};
+        
+        String[] benchs = {"matheus---teste",
+                          //"c432",
+                          //"c499",
+                          //"c880",
+                          //"c1355",
+                          //"c1908",
+                          //"c2670",
+                          //"c3540",
+                          //"c5315",
+                          //"c6288",
+                          //"c7552"};
+                          "c432"};
+        
+        
+        String[] libs = {"lib_min_no_cost",
+                         "lib_basic_no_cost",
+                         "lib_complex_no_cost",
+                         "lib_full_no_cost",
+                         "lib_full_area_cost",
+                         "lib_full_susceptability_cost",
+                         "lib_full_worst_susceptability_cost"};
+        
+        String[] reliabilities = {"total_gates",
+                                  "fanouts",
+                                  "levels",
+                                  "in",
+                                  "out",
+                                  "fixed_reliability",
+                                  "mtbf_fixed_reliability",
+                                  "custom_45nm",
+                                  "mtbf_custom_45nm",
+                                  "circuit_name_file"};
+        
+        
+        File dir = new File("files/mappeds");
+        
+        for (String bench : benchs) {
+            
+            ArrayList<ArrayList<String>> csv = new ArrayList<>();
+            
+            // Add header
+            csv.add(new ArrayList<>());
+            csv.get(0).add(bench);
+            
+            //Add indexes
+            int counter = 1;
+            for (String cell : cellList) {                
+                csv.add(new ArrayList<>());
+                csv.get(counter).add(cell);
+                counter++;
+            }
+            
+            for (String reliability : reliabilities) {
+                csv.add(new ArrayList<>());
+                csv.get(counter).add(reliability);
+                counter++;
+            }
+            
+            //Complete header
+            for (String lib : libs) {
+                csv.get(0).add(lib);
+            }
+            
+            
+            File[] matches = dir.listFiles(new FilenameFilter() {
+                public boolean accept(File dir, String name) {
+                    return name.startsWith(bench);
+                }
+            });
+            
+            ArrayList<ProbCircuit> circuits = new ArrayList<>();
+        
+                                    
+            for (File matche : matches) {
+                circuits.add(new CircuitFactory(Terminal.getInstance().getCellLibrary(), "files/mappeds/" + matche.getName()).getProbCircuit());            
+            }
+                        
+            
+            for (String lib : libs) {
+                int counter2 = 1;
+                for (ProbCircuit circuit : circuits) {
+                    if(circuit.getName().contains(lib)) {
+                        for (String cell : cellList) {
+                            csv.get(counter2).add(Integer.toString(circuit.getCellQuantity(cell)));
+                            counter2++;
+                            //System.out.println(cell+": " + circuit.getCellQuantity(cell));
+                        }
+                        
+                        csv.get(counter2).add(Integer.toString(circuit.getProbGates().size()));
+                        counter2++;
+                        
+                        csv.get(counter2).add(Integer.toString(circuit.getFanouts().size()));
+                        counter2++;
+                        
+                        csv.get(counter2).add(Integer.toString(circuit.getProbGateLevels().size()));
+                        counter2++;
+                        
+                        csv.get(counter2).add(Integer.toString(circuit.getProbInputs().size()));
+                        counter2++;
+                        
+                        csv.get(counter2).add(Integer.toString(circuit.getProbOutputs().size()));
+                        counter2++;
+                        
+                        SPRController spr = new SPRController(circuit, Terminal.getInstance().getCellLibrary());
+                        BigDecimal val = spr.getReliability();
+                        csv.get(counter2).add(val.toString());
+                        counter2++;
+                        
+                        csv.get(counter2).add(CommonOps.getMTBFBigInt(val).toString());
+                        counter2++;
+                        
+                        val = spr.getReliabilityCustomLib(Terminal.getInstance().getCustomMatrixLib());
+                        csv.get(counter2).add(val.toString());
+                        counter2++;
+                        
+                        csv.get(counter2).add(CommonOps.getMTBFBigInt(val).toString());
+                        counter2++;
+                        
+                        csv.get(counter2).add("files/mappeds/" + circuit.getName());                        
+                    }
+                }
+            }
+            
+            
+            for (ArrayList<String> arrayList : csv) {
+                System.out.println(arrayList);
+            }
+                        
+        }        
                 
-        /*
-        for (CustomMatrix cMatrix : cMatrixLib.getcMatrixes()) {
-            System.out.println(cMatrix);
-            matrixPrint(cMatrix.getcMatrix());
-            System.out.println("# # # #");
-        } */
         
-        matrixPrint(pCircuit.getProbGateByName("g059").getReliabilityMatrix());
-        System.out.println("# # # #");
-        pCircuit.setCustomMatrix(cMatrixLib);
         
-        matrixPrint(pCircuit.getProbGateByName("g059").getReliabilityMatrix());
-        System.out.println("# # # #");
-        System.out.println(cMatrixLib.getName());
+        
+                
+        //CustomMatrixLibrary cMatrixLib = Terminal.getInstance().getCustomMatrixLib();        
+        //System.out.println(pCircuit);
+        
+        //pCircuit.setCustomMatrix(cMatrixLib);
+        
+        
+        //Terminal.getInstance().getCellLibrary().setPTMCells(new BigDecimal("0.99999802"));
+
+        //pCircuit.setPTMReliabilityMatrix();
+
+        
+        //matrixPrint(pCircuit.getProbGateByName("g059").getReliabilityMatrix());
+        //System.out.println("# # # #");
+        
+        //pCircuit.setCustomMatrix(cMatrixLib);        
+        //matrixPrint(pCircuit.getProbGateByName("g059").getReliabilityMatrix());
+        //System.out.println("# # # #");
+        //System.out.println(cMatrixLib.getName());
+        
+        //SPRController controller = new SPRController(Terminal.getInstance());
+        
+        //System.out.println(controller.getReliability(new BigDecimal("0.99999802")));
+        //System.out.println(controller.getReliability(new BigDecimal("0.999999")));
         
     }
     
@@ -841,7 +1077,7 @@ public class Commands {
         Terminal.getInstance().terminalOutput("Circuit PTM is "+ptm);
     }
     
-    public void Foo3(String argument) throws IOException {
+    public void Foo3(String argument) throws IOException, Exception {
         
         final long startTime = System.currentTimeMillis();
         
@@ -874,7 +1110,7 @@ public class Commands {
         Terminal.getInstance().terminalOutput(timeConsup);
     }
     
-    public void Foo4() throws IOException {
+    public void Foo4() throws IOException, Exception {
         
         double[] reliabilities = new double[]{
             0.7,
@@ -900,7 +1136,7 @@ public class Commands {
         }            
     }
     
-    public void Foo5() throws IOException {                                               
+    public void Foo5() throws IOException, Exception {                                               
         
         
         
@@ -952,7 +1188,7 @@ public class Commands {
         Terminal.getInstance().terminalOutput(timeConsup);
     }
     
-    public void Foo6() throws IOException {              
+    public void Foo6() throws IOException, Exception {              
         
         final long startTime = System.currentTimeMillis();
         
@@ -3075,7 +3311,7 @@ public class Commands {
         }
     }
     
-    public void Foo7() throws IOException {
+    public void Foo7() throws IOException, Exception {
                 
         /*
         
@@ -3287,7 +3523,7 @@ public class Commands {
         wFile.CloseFile();
     }
     
-    public void Foo8() throws IOException {                
+    public void Foo8() throws IOException, Exception {                
         Map<String, BigDecimal[][]> schivittzCells = new HashMap<>();
         
         String[] circuits = new String[]{            
@@ -3388,7 +3624,7 @@ public class Commands {
     }
     
     
-    public void Foo9() throws ScriptException, IOException {                
+    public void Foo9() throws ScriptException, IOException, Exception {                
         
         /*
         Terminal.getInstance().getCellLibrary().setPTMCells2(Float.valueOf(reliabilities[i]));

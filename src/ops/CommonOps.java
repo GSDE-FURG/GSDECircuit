@@ -8,6 +8,7 @@ package ops;
 import java.io.File;
 import java.lang.Math.*;
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.math.RoundingMode;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
@@ -414,6 +415,18 @@ public class CommonOps {
         BigDecimal mtbf = BigDecimal.ONE.divide((getFailureRate(reliability)), 12, RoundingMode.HALF_UP);
         
         return mtbf;
+    }
+    
+    /**
+     * Return the MTBF value based on reliability value passed
+     * @param reliability
+     * @return 
+     */
+    public static BigInteger getMTBFBigInt(BigDecimal reliability) {
+        
+        BigDecimal mtbf = BigDecimal.ONE.divide((getFailureRate(reliability)), 12, RoundingMode.HALF_UP);
+        
+        return mtbf.toBigInteger();
     }
     
     /**
