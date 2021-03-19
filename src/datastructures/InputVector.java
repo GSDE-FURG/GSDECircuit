@@ -4,7 +4,6 @@ import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-import tool.Terminal;
 
 /**
  * a classe InputVector representa uma combinação de sinais de entrada de um

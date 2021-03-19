@@ -1,4 +1,4 @@
-// Benchmark "c432.blif" written by ABC on Wed Mar  3 18:59:13 2021
+// Benchmark "c432.blif" written by ABC on Fri Mar  5 17:00:28 2021
 
 module \c432.blif  ( 
     G1gat, G4gat, G8gat, G11gat, G14gat, G17gat, G21gat, G24gat, G27gat,

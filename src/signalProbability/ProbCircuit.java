@@ -509,6 +509,13 @@ public class ProbCircuit extends Circuit {
         }
     }
     
+    public void syncCellPTMs() {
+        
+        for(ProbGate pGate : this.probGates) {                       
+            pGate.setReliabilityMatrix(pGate.getType().getPTM());            
+        }
+    }
+    
     public void makeProbInterLevels() {
         
         for (int i = 0; i < this.probGateLevels.size(); i++) {

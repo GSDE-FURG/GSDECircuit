@@ -4,6 +4,7 @@ package tool;
 import datastructures.CellLibrary;
 import datastructures.Circuit;
 import datastructures.CustomMatrixLibrary;
+import datastructures.InputVector;
 import java.awt.AWTException;
 import java.awt.Font;
 import java.awt.Robot;
@@ -11,7 +12,17 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.util.ArrayList;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -24,27 +35,116 @@ import javax.swing.JTextArea;
 import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 import levelDatastructures.LevelCircuit;
+import ops.SPROpsChuloMedio;
 import readers.MappedVerilogReader;
 import signalProbability.ProbCircuit;
 
+import org.apache.commons.cli.*;
+
 //TODO: Keep a global StringBuilder to decrease memory footprint
 
-class TestTerminal {
+class TerminalWrapper {
     public static void main(String[] args) throws ScriptException, AWTException, IOException, Exception {   
         if(args.length > 0) {
             
-            CommandLine cmdLine = new CommandLine(args);
-            //<genlib_file> <verilog_file> <reliability (ex:0.9)>
+          /**
+            * 
+            * 
+            * 
+            * 
+            * 
+            * 
+            * 
+            * Terminal usado no trabalho de sistemas evolutivos
+            * 
+            * 
+            * 
+            * 
+            * 
+            * 
+            * 
+            */
             
-           // Terminal term = Terminal.getInstance();
-            //term.executeCommand("read_genlib " + args[0]);
-            //term.executeCommand("read_verilog " + args[1]);
-            //term.executeCommand("spr_float " + args[2]);
+            Options options = new Options();
+
+            Option indataset = new Option("id", "indataset", true, "input dataset path");
+            indataset.setRequired(false);        
+            options.addOption(indataset);
+
+            Option output = new Option("o", "output", true, "output file name");
+            output.setRequired(false);
+            options.addOption(output);
+
+            Option inputvector = new Option("iv", "invector", true, "input vector (big)int format");
+            inputvector.setRequired(false);
+            options.addOption(inputvector);
+
+            Option range = new Option("rg", "range", true, "range for input vector (big)int format");
+            range.setRequired(false);
+            options.addOption(range);
+
+            Option help = new Option("h", "help", false, "show this message");
+            help.setRequired(false);
+            options.addOption(help);
+                
+
+            CommandLineParser parser = new DefaultParser();
+            HelpFormatter formatter = new HelpFormatter();
+            CommandLine cmd;
+
+            try {
+                cmd = parser.parse(options, args);
+
+                if(cmd.hasOption("help")) {
+                    formatter.printHelp("VetoresCriticos", options);
+                    System.exit(1);
+                } else {
+                    String inputDatasetPath = cmd.getOptionValue("indataset");
+                    String outputFilePath = cmd.getOptionValue("output");
+                    String inVector = cmd.getOptionValue("invector");                
+
+                    ProbCircuit pCircuit = initLibraryAndCircuit();
+
+                    ArrayList<String> vectorsAndReliabilities = new ArrayList<>();
+
+                    if(cmd.hasOption("indataset")) {
+                        vectorsAndReliabilities = getReliabilitiesFromDataset(pCircuit, inputDatasetPath);                                        
+                    } else {
+                        if(cmd.hasOption("range") && (cmd.hasOption("invector"))) {
+                            int rangeValue = Integer.parseInt(cmd.getOptionValue("range"));
+                            BigInteger v = new BigInteger(inVector);
+                            for (int i = 0; i < rangeValue; i++) {
+                                vectorsAndReliabilities.add(getSPRReliabilityVector(pCircuit, v));
+                                v = v.add(BigInteger.ONE);
+                            }
+                        } else {
+                            if (cmd.hasOption("invector")) {                      
+                                vectorsAndReliabilities.add(getSPRReliabilityVector(pCircuit, new BigInteger(inVector)));
+                            }
+                        }                     
+                    }
+
+                    if(!vectorsAndReliabilities.isEmpty()) {
+                        if(cmd.hasOption("output")) {
+                            writeResult(outputFilePath, vectorsAndReliabilities);
+                        } else {
+                            for (String vectorsAndReliability : vectorsAndReliabilities) {
+                                System.out.println(vectorsAndReliability);
+                            }
+                        }                    
+                    }                 
+                    }            
+            } catch (ParseException e) {
+                System.out.println(e.getMessage());
+                formatter.printHelp("VetoresCriticos", options);
+
+                System.exit(1);
+            }    
             
             
         } else {
             Terminal term = Terminal.getInstance();        
-            term.open(0, 0, 700, 700);
+            term.open(0, 0, 820, 700);
             
             // FOR DEV
             Robot r = new Robot();
@@ -66,7 +166,103 @@ class TestTerminal {
             // ##########
         }        
     }
+
+    /**
+     * 
+     * 
+     * 
+     * 
+     * 
+     * 
+     * 
+     * MÉTODOS USADOS NO TRABALHO DE SISTEMAS EVOLUTIVOS 2020
+     * 
+     * 
+     * 
+     * 
+     * 
+     * 
+     * 
+     */
+    
+    private static String getSPRReliabilityVector(ProbCircuit pCircuit, BigInteger vector) {        
+        InputVector inputV = new InputVector(vector);
+        String result = "" + vector + ";" + SPROpsChuloMedio.getSPRReliability(pCircuit, inputV, 30);
+        
+        return result;
+    }
+    
+    private static ArrayList<String> getReliabilitiesFromDataset(ProbCircuit pCircuit, String path) throws IOException {
+        
+        ArrayList<String> vectorsAndReliabilities = new ArrayList<>();
+        String resultReliability;
+        
+        for (String str : readVectorsList(path)) {
+                    resultReliability = SPROpsChuloMedio.getSPRReliability(pCircuit, new InputVector(new BigInteger(str)), 30).toString();
+
+                    vectorsAndReliabilities.add("" + str + ";" + resultReliability);
+                }
+        
+        return vectorsAndReliabilities;
+    }
+    
+    private static ProbCircuit initLibraryAndCircuit() throws IOException, ScriptException, Exception {
+        
+        CellLibrary library = new CellLibrary("./cadence.genlib");
+        
+        // Set reliability value
+        library.setPTMCells(new BigDecimal("0.999"));
+        
+        Circuit circuit = new MappedVerilogReader("./b10_C_cadence.v", library).getCircuit();
+        
+        ProbCircuit pCircuit = new ProbCircuit(circuit);
+
+        pCircuit.clearProbSignalsMatrix();                    
+        pCircuit.setDefaultProbSourceSignalMatrix();
+        pCircuit.setProbSignalStates(false);
+        pCircuit.setPTMReliabilityMatrix();
+        
+        return pCircuit;
+    }
+    
+    private static ArrayList<String> readVectorsList(String path) throws FileNotFoundException, IOException {
+        
+        ArrayList<String> result = new ArrayList<>();
+
+        BufferedReader br;
+        String linha;
+        br = new BufferedReader(new FileReader(path));
+        while ((linha = br.readLine()) != null) {
+            result.add(linha);
+        }
+        br.close();
+        return result;
+    }
+    
+    
+    private static void writeResult(String outputPath, ArrayList<String> dataset) {
+        Writer writer = null;
+
+        try {
+            writer = new BufferedWriter(new OutputStreamWriter(
+                  new FileOutputStream(outputPath), "utf-8"));
+            
+            writer.write("Vetor;Confiabilidade" + "\n");
+            for (String string : dataset) {
+                writer.write(string + "\n");
+            }                        
+            writer.close();
+        } catch (IOException ex) {
+        } finally {
+           try {writer.close();} catch (Exception ex) {/*ignore*/}
+        }
+    }
+
 }
+
+
+
+
 
 public class Terminal {
     private final JFrame frm = new JFrame("GSDE - Circuit Benchmarker App");
@@ -337,5 +533,5 @@ public class Terminal {
 
     private static final class TerminalHolder {
         static final Terminal INSTANCE = new Terminal();
-    }
+    }        
 }

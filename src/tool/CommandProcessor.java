@@ -187,7 +187,7 @@ class CommandProcessor {
                 } else if(help) {
                     Terminal.getInstance().terminalOutput(cmd.getHelpDesc(mainCommand));
                 } else {
-                    cmd.getReliabilityPTM("0.99999802", "default");                    
+                    cmd.getReliabilityPTM("0.99999802495", "default");                    
                 }
                 break;    
                 
@@ -223,25 +223,25 @@ class CommandProcessor {
             
             case "spr":
                 if(argument.equals("--custom_lib")) {
-                    cmd.getReliabilitySPR("0.99999802", "custom_lib");
+                    cmd.getReliabilitySPR("0.99999802495", "custom_lib");
                 } else if(!argument.isEmpty()) {
                     Terminal.getInstance().terminalOutput("Please use the arg \"--help\"");                    
                 } else if(help) {
                     Terminal.getInstance().terminalOutput(cmd.getHelpDesc(mainCommand));
                 } else {
-                    cmd.getReliabilitySPR("0.99999802", "big_decimal");                    
+                    cmd.getReliabilitySPR("0.99999802495", "big_decimal");                    
                 }
                 break;                
             
             case "spr-mp":
                 if(argument.equals("--custom_lib")) {
-                    cmd.getReliabilitySPRMP("0.99999802", "custom_lib");
+                    cmd.getReliabilitySPRMP("0.99999802495", "custom_lib");
                 } else if(!argument.isEmpty()) {
                     Terminal.getInstance().terminalOutput("Please use the arg \"--help\"");                    
                 } else if(help) {
                     Terminal.getInstance().terminalOutput(cmd.getHelpDesc(mainCommand));
                 } else {
-                    cmd.getReliabilitySPRMP("0.99999802", "big_decimal");                    
+                    cmd.getReliabilitySPRMP("0.99999802495", "big_decimal");                    
                 }
                 break;                
             
@@ -403,6 +403,9 @@ class CommandProcessor {
                 break;
             case "foo9":
                 cmd.Foo9();
+                break;
+            case "csv_spr_generator":
+                cmd.CSVSprGenerator();
                 break;
             default:
                 Terminal.getInstance().terminalOutput("Command not found!!!");

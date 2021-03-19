@@ -81,7 +81,7 @@ public class SPROpsChuloMedio {
         signalMatrix[0][0] = correct0;
         signalMatrix[0][1] = incorrect1;
         signalMatrix[1][0] = incorrect0;
-        signalMatrix[1][1] = correct1;
+        signalMatrix[1][1] = correct1;        
         
         return signalMatrix;
     }

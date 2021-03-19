@@ -7,6 +7,7 @@ package manipulator;
 
 import datastructures.CellLibrary;
 import datastructures.CustomMatrixLibrary;
+import datastructures.InputVector;
 import java.math.BigDecimal;
 import ops.SPROpsChuloMedio;
 import signalProbability.ProbCircuit;
@@ -22,6 +23,9 @@ public class SPRController {
     private ProbCircuit pCircuit;
     private CellLibrary cellLib;
     private CustomMatrixLibrary cMatrixLib;
+    private boolean sprPrepared = false;
+    
+    
     
     public SPRController(Terminal terminal) {
         this.terminal = terminal;
@@ -35,13 +39,66 @@ public class SPRController {
     }
     
     public BigDecimal getReliability() {
-        prepareForSPR(new BigDecimal("0.99999802"));
+        prepareForSPR(new BigDecimal("0.99999802495"));
+        BigDecimal confValue = SPROpsChuloMedio.getSPRReliability(pCircuit);
+        return confValue;
+    }
+    
+    public BigDecimal getReliability(int scale) {
+        prepareForSPR(new BigDecimal("0.99999802495"));
+        BigDecimal confValue = SPROpsChuloMedio.getSPRReliability(pCircuit, scale);
+        return confValue;
+    }
+    
+    public BigDecimal getReliability(InputVector inVector, int scale) {
+        if(!this.sprPrepared) {
+            prepareForSPR(new BigDecimal("0.99999802495"));
+        }         
+        BigDecimal confValue = SPROpsChuloMedio.getSPRReliability(pCircuit, inVector, scale);
+        return confValue;
+    }
+    
+    public BigDecimal getReliability(String decimalVector, int scale) {
+        if(!this.sprPrepared) {
+            prepareForSPR(new BigDecimal("0.99999802495"));
+        }         
+        BigDecimal confValue = SPROpsChuloMedio.getSPRReliability(pCircuit, new InputVector(decimalVector), scale);
+        return confValue;
+    }
+    
+    public BigDecimal getReliability(String decimalVector, int scale, CustomMatrixLibrary customLib) {
+        if(!this.sprPrepared) {
+            prepareForSPR(new BigDecimal("0.99999802495"));
+        }
+        pCircuit.setCustomMatrix(customLib);
+        BigDecimal confValue = SPROpsChuloMedio.getSPRReliability(pCircuit, new InputVector(decimalVector), scale);
+        return confValue;
+    }
+    
+    public BigDecimal getReliability(String reliValue) {
+        prepareForSPR(new BigDecimal(reliValue));
         BigDecimal confValue = SPROpsChuloMedio.getSPRReliability(pCircuit);
         return confValue;
     }
     
     public BigDecimal getReliability(BigDecimal reliValue) {
         prepareForSPR(reliValue);
+        BigDecimal confValue = SPROpsChuloMedio.getSPRReliability(pCircuit);
+        return confValue;
+    }
+    
+    public BigDecimal getReliabilityCustomLib() {
+        prepareForSPR(new BigDecimal("0.99999802495"));
+        
+        pCircuit.setCustomMatrix(cMatrixLib);
+        BigDecimal confValue = SPROpsChuloMedio.getSPRReliability(pCircuit);
+        return confValue;
+    }
+    
+    public BigDecimal getReliabilityCustomLib(String reliValue) {
+        prepareForSPR(new BigDecimal(reliValue));
+        
+        pCircuit.setCustomMatrix(cMatrixLib);
         BigDecimal confValue = SPROpsChuloMedio.getSPRReliability(pCircuit);
         return confValue;
     }
@@ -55,7 +112,7 @@ public class SPRController {
     }
     
     public BigDecimal getReliabilityCustomLib(CustomMatrixLibrary customLib) {
-        prepareForSPR(new BigDecimal("0.99999802"));         
+        prepareForSPR(new BigDecimal("0.99999802495"));         
         pCircuit.setCustomMatrix(customLib);
         BigDecimal confValue = SPROpsChuloMedio.getSPRReliability(pCircuit);
         return confValue;
@@ -104,12 +161,12 @@ public class SPRController {
             System.out.println("CellLibrary not initialized");
         }        
     }
+        
     
     private void prepareForSPR(BigDecimal reliability) {
-        this.cellLib.setPTMCells(reliability);                        
-        this.pCircuit.clearProbSignalsMatrix();                    
+        this.cellLib.setPTMCells(reliability);                                         
         this.pCircuit.setDefaultProbSourceSignalMatrix();
-        this.pCircuit.setProbSignalStates(false);
-        this.pCircuit.setPTMReliabilityMatrix();     
+        this.pCircuit.setPTMReliabilityMatrix();
+        this.sprPrepared = true;
     }
 }

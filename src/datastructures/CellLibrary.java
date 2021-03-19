@@ -257,6 +257,79 @@ public class CellLibrary {
         }
     }
     
+    public void setPTMCellByName(String cellName, BigDecimal reliability) {
+        Cell cell = this.getCellByName(cellName);
+        if(cell == null) {
+            System.err.print("Cell: " + cellName + " Not Found!!!");
+        } else {
+            
+            ScriptEngineManager mgr = new ScriptEngineManager();
+            ScriptEngine engine = mgr.getEngineByName("JavaScript");
+            BigDecimal[][] ptm;
+            BigDecimal[][] itm2;
+            
+            if(cell.getInputs().isEmpty()) {            
+                ptm = new BigDecimal[1][2];
+                ptm[0][0] = reliability;
+                ptm[0][1] = BigDecimal.ONE.subtract(reliability);
+                itm2 = new BigDecimal[1][2];
+                itm2[0][0] = BigDecimal.ONE;
+                itm2[0][1] = BigDecimal.ZERO;                
+            } else {            
+                String function = cell.getFunctions().get(0);
+                int x = PowInt(2, cell.getInputs().size());
+                int y = PowInt(2, cell.getOutputs().size());
+
+                ptm = new BigDecimal[x][y];
+                itm2 = new BigDecimal[x][y];
+
+
+                function = function.split("=")[1];
+                function = function.replaceAll("\\Q*\\E", "&&");
+                function = function.replaceAll("\\Q+\\E", "||");            
+                                
+                for (int j = 0; j < x; j++) {                                                 
+
+                    String binary = String.format("%0" + cell.getInputs().size() + "d", Integer.valueOf(Integer.toBinaryString(j)));
+
+
+                    try {
+                        for (int p = 0; p < cell.getInputs().size(); p++) {
+                            int bit = Character.getNumericValue(binary.charAt(p));
+                            String formula = "var " + cell.getInputs().get(p) + "=" + Boolean.toString(bit != 0) + ";";
+
+                            engine.eval(formula);         
+                        }
+
+                        boolean result = (boolean)engine.eval(function + ";");                                        
+
+                        if(result) {
+
+                            ptm[j][1] = reliability;
+                            ptm[j][0] = BigDecimal.ONE.subtract(reliability);
+
+                            itm2[j][1] = BigDecimal.ONE;
+                            itm2[j][0] = BigDecimal.ZERO;
+
+                        } else {
+                            ptm[j][1] = BigDecimal.ONE.subtract(reliability);
+                            ptm[j][0] = reliability;
+
+                            itm2[j][1] = BigDecimal.ZERO;
+                            itm2[j][0] = BigDecimal.ONE;
+                        }                                        
+
+                    } catch (ScriptException ex) {
+                        Logger.getLogger(PTMOps.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+            }
+
+            cell.setPTM(ptm);
+            cell.setItm2(itm2);
+        }
+    }
+    
     public void setPTMCells2(float reliability) {
         
         System.out.println("PAPAI ===> " + reliability);
