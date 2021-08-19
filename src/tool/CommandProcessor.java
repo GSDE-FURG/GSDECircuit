@@ -9,7 +9,11 @@ package tool;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Timer;
+import java.util.TimerTask;
 import javax.script.ScriptException;
+
+import java.util.concurrent.TimeUnit;
 
 /**
  *
@@ -18,6 +22,14 @@ import javax.script.ScriptException;
 class CommandProcessor {
     public CommandProcessor() {
     }
+    
+    class TimeoutTimer extends TimerTask {
+    public void run() {                
+        Terminal.getInstance().terminalOutput("Catita...");
+        System.out.println("Catita...");
+
+    }
+}
 
     public void processCmd(String command) throws ScriptException, IOException, Exception {
         
@@ -222,6 +234,10 @@ class CommandProcessor {
                 break;
             
             case "spr":
+                //Timer timer = new Timer();        
+                //timer.schedule(new TimeoutTimer(), 0, 1000);
+                //TimeUnit.SECONDS.sleep(5);
+                //System.out.println("mamamae");
                 if(argument.equals("--custom_lib")) {
                     cmd.getReliabilitySPR("0.99999802495", "custom_lib");
                 } else if(!argument.isEmpty()) {
@@ -231,6 +247,7 @@ class CommandProcessor {
                 } else {
                     cmd.getReliabilitySPR("0.99999802495", "big_decimal");                    
                 }
+                //timer.cancel();
                 break;                
             
             case "spr-mp":
@@ -376,6 +393,9 @@ class CommandProcessor {
                 } else {
                     new Commands().WriteVerilog(argument, Terminal.getInstance().getCircuit());
                 }
+                break;
+            case "print__path":
+                cmd.PrintPath();
                 break;
             case "foo":
                 cmd.Foo();

@@ -241,16 +241,22 @@ public class SPRMultiPassV3Ops {
         ArrayList<ProbSignal> fanouts = pCircuit.getFanouts();
         ArrayList<ProbSignal> newFanouts = new ArrayList<>();
         
-        for (int i = 0; i < (fanouts.size()); i++) {
-            newFanouts.add(fanouts.get(i));            
+        if(fanouts.isEmpty()) {
+            return SPROpsChuloMedio.getSPRReliability(pCircuit);
+        } else {
+            for (int i = 0; i < (fanouts.size()); i++) {
+                newFanouts.add(fanouts.get(i));            
+            }
+
+            ProbSignal pSignal = newFanouts.get(0);
+
+            value = getMultiPass(pCircuit, newFanouts, pSignal, 0);
+
+
+            return value;
         }
-                
-        ProbSignal pSignal = newFanouts.get(0);
-        
-        value = getMultiPass(pCircuit, newFanouts, pSignal, 0);
         
         
-        return value;
     }
     
     /**

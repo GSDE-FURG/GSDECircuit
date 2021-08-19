@@ -93,7 +93,7 @@ public class CommonOps {
                         
                         BigDecimal val = a.multiply(matrixB[rowB][colB]);
 
-                        matrixC[i*rowsB+rowB][j*colsB+colB] = val.setScale(30, RoundingMode.HALF_UP);
+                        matrixC[i*rowsB+rowB][j*colsB+colB] = val.setScale(15, RoundingMode.HALF_UP);
                         //matrixC[i*rowsB+rowB][j*colsB+colB] = val;
                     }
                 }
@@ -129,7 +129,7 @@ public class CommonOps {
         for (int i = 0; i < aRows; i++) { // aRow
             for (int j = 0; j < bColumns; j++) { // bColumn
                 for (int k = 0; k < aColumns; k++) { // aColumn
-                    C[i][j] = C[i][j].add(A[i][k].multiply(B[k][j]).setScale(30, RoundingMode.HALF_UP)).setScale(30, RoundingMode.HALF_UP);
+                    C[i][j] = C[i][j].add(A[i][k].multiply(B[k][j]).setScale(15, RoundingMode.HALF_UP)).setScale(15, RoundingMode.HALF_UP);
                     //C[i][j] = C[i][j].add(A[i][k].multiply(B[k][j]));
                 }
             }

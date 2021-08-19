@@ -4,12 +4,12 @@ module C17V2 (
   output G6gat, G7gat ;
   wire w1, w2, w3, w4;
   
-  NAND2X1   U2(.A(G5gat), .B(G1gat), .Y(w1));
-  NAND2X1   U0(.A(G5gat), .B(G2gat), .Y(w2));  
-  NAND2X1   U1(.A(w2), .B(G4gat), .Y(w3));
-  OR2X1     U4(.A(G4gat), .B(G3gat), .Y(w4));
-  NAND2X1   U3(.A(w1), .B(w3), .Y(G6gat));
-  AND2X1    U5(.A(w4), .B(w2), .Y(G7gat));
+  NAND2   U2(.A(G5gat), .B(G1gat), .Y(w1));
+  NAND2   U0(.A(G5gat), .B(G2gat), .Y(w2));  
+  NAND2   U1(.A(w2), .B(G4gat), .Y(w3));
+  OR2     U4(.A(G4gat), .B(G3gat), .Y(w4));
+  NAND2   U3(.A(w1), .B(w3), .Y(G6gat));
+  AND2    U5(.A(w4), .B(w2), .Y(G7gat));
 
 endmodule
 

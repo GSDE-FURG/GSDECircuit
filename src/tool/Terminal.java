@@ -147,8 +147,10 @@ class TerminalWrapper {
             term.open(0, 0, 820, 700);
             
             // FOR DEV
-            Robot r = new Robot();
+            //Robot r = new Robot();
             //term.executeCommand("read_genlib cadence.genlib");
+            //term.executeCommand("read_genlib lib_full_no_cost.genlib");
+            //term.executeCommand("read_custom_matrix 45nm.txt");
             /*Commite antes da reunião */
             //term.executeCommand("read_genlib cadence_schiv.genlib");
             //term.executeCommand("read_genlib 22-1.genlib");
@@ -160,9 +162,9 @@ class TerminalWrapper {
             //term.executeCommand("read_verilog twoInvOneAnd.v");
             //term.executeCommand("init_level");
 
-            term.executeCommand("clear");
-            r.keyPress(KeyEvent.VK_ENTER);
-            r.keyRelease(KeyEvent.VK_ENTER);
+            //term.executeCommand("clear");
+            //r.keyPress(KeyEvent.VK_ENTER);
+            //r.keyRelease(KeyEvent.VK_ENTER);
             // ##########
         }        
     }

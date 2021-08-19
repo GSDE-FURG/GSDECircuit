@@ -105,7 +105,6 @@ public class SPRController {
     
     public BigDecimal getReliabilityCustomLib(BigDecimal reliValue) {
         prepareForSPR(reliValue);
-        
         pCircuit.setCustomMatrix(cMatrixLib);
         BigDecimal confValue = SPROpsChuloMedio.getSPRReliability(pCircuit);
         return confValue;
